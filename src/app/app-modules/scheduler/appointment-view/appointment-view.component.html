@@ -3,84 +3,140 @@
     <div class="col-xs-12">
       <div class="col-xs-4 box">
         <mat-form-field class="input-full-width">
-          <input matInput [matDatepicker]="datepicker" placeholder="{{currentLanguageSet?.appointmentDate}}" name='viewDate' [(ngModel)]="viewDate" (ngModelChange)="getAllAppointment()">
-          <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+          <input
+            matInput
+            [matDatepicker]="datepicker"
+            placeholder="{{ currentLanguageSet?.appointmentDate }}"
+            name="viewDate"
+            [(ngModel)]="viewDate"
+            (ngModelChange)="getAllAppointment()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="datepicker"
+          ></mat-datepicker-toggle>
           <mat-datepicker #datepicker></mat-datepicker>
         </mat-form-field>
       </div>
       <div class="col-xs-4 sw">
-        <input type="search" class="search" autocomplete="off" placeholder="{{currentLanguageSet?.inTableSearch}}" name="filterTerm"
-          [(ngModel)]="filterTerm" (keyup)="filterBeneficiaryList(filterTerm)" />
+        <input
+          type="search"
+          class="search"
+          autocomplete="off"
+          placeholder="{{ currentLanguageSet?.inTableSearch }}"
+          name="filterTerm"
+          [(ngModel)]="filterTerm"
+          (keyup)="filterBeneficiaryList(filterTerm)"
+        />
         <button class="go" (click)="filterBeneficiaryList(filterTerm)">
           <span class="material-icons">search</span>
         </button>
       </div>
-        <div class="col-xs-4">
-              <button mat-raised-button class="pull-right btn-green" color="primary" id='refresh' (click)="getAllAppointment()"> {{currentLanguageSet?.refresh}} </button>
-          </div>
-      
+      <div class="col-xs-4">
+        <button
+          mat-raised-button
+          class="pull-right btn-green"
+          color="primary"
+          id="refresh"
+          (click)="getAllAppointment()"
+        >
+          {{ currentLanguageSet?.refresh }}
+        </button>
+      </div>
     </div>
-
   </div>
 
   <mat-drawer-container class="example-container m-t-10" autosize>
-
-
     <div class="example-sidenav-content">
       <div class="container-fluid">
         <div class="row">
           <div class="col-xs-12">
             <section class="table-responsive">
-              <table class="table table-striped ">
-                <caption></caption> <!-- Table discription SonarQube bug fix -->
+              <table class="table table-striped">
+                <caption></caption>
+                <!-- Table discription SonarQube bug fix -->
                 <thead>
                   <tr>
-                    <th id="sNo">{{currentLanguageSet?.sNo}}</th>
-                    <th id="beneficiaryID">{{currentLanguageSet?.beneficiaryID}}</th>
-                    <th id="beneficiaryName">{{currentLanguageSet?.beneficiaryName}}</th>
-                    <th id="gender">{{currentLanguageSet?.gender}}</th>
-                    <th id="age">{{currentLanguageSet?.age}}</th>
-                    <th id="visitCategory">{{currentLanguageSet?.visitCategoryVisitNo}}</th>
-                    <th id="visitDate">{{currentLanguageSet?.visitDate}}</th>
-                    <th id="tCDate">{{currentLanguageSet?.tCDate}}</th>
-                    <th id="image">{{currentLanguageSet?.image}}</th>
-                    <th id="action" style="text-align: center;">{{currentLanguageSet?.action}}</th>
+                    <th id="sNo">{{ currentLanguageSet?.sNo }}</th>
+                    <th id="beneficiaryID">
+                      {{ currentLanguageSet?.beneficiaryID }}
+                    </th>
+                    <th id="beneficiaryName">
+                      {{ currentLanguageSet?.beneficiaryName }}
+                    </th>
+                    <th id="gender">{{ currentLanguageSet?.gender }}</th>
+                    <th id="age">{{ currentLanguageSet?.age }}</th>
+                    <th id="visitCategory">
+                      {{ currentLanguageSet?.visitCategoryVisitNo }}
+                    </th>
+                    <th id="visitDate">{{ currentLanguageSet?.visitDate }}</th>
+                    <th id="tCDate">{{ currentLanguageSet?.tCDate }}</th>
+                    <th id="image">{{ currentLanguageSet?.image }}</th>
+                    <th id="action" style="text-align: center">
+                      {{ currentLanguageSet?.action }}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <ng-template [ngIf]="filteredBeneficiaryList && filteredBeneficiaryList.length == 0">
+                  <ng-template
+                    [ngIf]="
+                      filteredBeneficiaryList &&
+                      filteredBeneficiaryList.length === 0
+                    "
+                  >
                     <tr *ngFor="let row of blankTable">
-                      <td> &nbsp; </td>
-                      <td> &nbsp; </td>
-                      <td> &nbsp; </td>
-                      <td> &nbsp; </td>
-                      <td> &nbsp; </td>
-                      <td> &nbsp; </td>
-                      <td> &nbsp; </td>
-                      <td> &nbsp; </td>
-                      <td> &nbsp; </td>
-                      <td> &nbsp; </td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
                     </tr>
                   </ng-template>
-                  <tr *ngFor="let beneficiary of pagedList; let m=index" class="table-hover">
-                    <td>{{filteredBeneficiaryList.indexOf(beneficiary)+1}}</td>
-                    <td>{{beneficiary?.beneficiaryID}}</td>
-                    <td>{{beneficiary?.benName | titlecase}}</td>
-                    <td>{{beneficiary.genderName | titlecase}}</td>
-                    <td>{{beneficiary.age}}</td>
+                  <tr
+                    *ngFor="let beneficiary of pagedList; let m = index"
+                    class="table-hover"
+                  >
                     <td>
-                      <span style="color:#a6a6a6">{{beneficiary.VisitCategory}} </span> /
-                      <span style="color:#a6a6a6">{{beneficiary.benVisitNo}}</span>
+                      {{ filteredBeneficiaryList.indexOf(beneficiary) + 1 }}
                     </td>
-                    <td>{{beneficiary.benVisitDate}}</td>
-                    <td>{{beneficiary.tCRequestDate}}</td>
-                    <td (click)="patientImageView(beneficiary.beneficiaryRegID)" matTooltip="{{currentLanguageSet?.image}}">
-                      <img src="assets/images/Avatar-Profile_30X30.png" alt="Avatar Profile">
+                    <td>{{ beneficiary?.beneficiaryID }}</td>
+                    <td>{{ beneficiary?.benName | titlecase }}</td>
+                    <td>{{ beneficiary.genderName | titlecase }}</td>
+                    <td>{{ beneficiary.age }}</td>
+                    <td>
+                      <span style="color: #a6a6a6"
+                        >{{ beneficiary.VisitCategory }}
+                      </span>
+                      /
+                      <span style="color: #a6a6a6">{{
+                        beneficiary.benVisitNo
+                      }}</span>
+                    </td>
+                    <td>{{ beneficiary.benVisitDate }}</td>
+                    <td>{{ beneficiary.tCRequestDate }}</td>
+                    <td
+                      (click)="patientImageView(beneficiary.beneficiaryRegID)"
+                      matTooltip="{{ currentLanguageSet?.image }}"
+                    >
+                      <img
+                        src="assets/images/Avatar-Profile_30X30.png"
+                        alt="Avatar Profile"
+                      />
                     </td>
                     <td>
-                      <button mat-raised-button (click)="cancelTCRequest(beneficiary)" matTooltip="{{currentLanguageSet?.cancelTc}}" color="warn"
-                        [disabled]='beneficiary.specialist_flag != 1'>
-                        {{currentLanguageSet?.cancel}}
+                      <button
+                        mat-raised-button
+                        (click)="cancelTCRequest(beneficiary)"
+                        matTooltip="{{ currentLanguageSet?.cancelTc }}"
+                        color="warn"
+                        [disabled]="beneficiary.specialist_flag !== 1"
+                      >
+                        {{ currentLanguageSet?.cancel }}
                       </button>
                     </td>
                   </tr>
@@ -88,11 +144,18 @@
                 <tfoot *ngIf="filteredBeneficiaryList.length > 0">
                   <tr *ngIf="filteredBeneficiaryList.length > 0">
                     <td colspan="5">
-                      <div class="totalCount"> {{currentLanguageSet?.totalCount}} : {{ filteredBeneficiaryList.length }}</div>
+                      <div class="totalCount">
+                        {{ currentLanguageSet?.totalCount }} :
+                        {{ filteredBeneficiaryList.length }}
+                      </div>
                     </td>
                     <td colspan="5">
-                      <mat-paginator [length]="filteredBeneficiaryList.length" [pageSize]="rowsPerPage" [pageSizeOptions]="[rowsPerPage]"
-                                     (page)="pageChanged($event)">
+                      <mat-paginator
+                        [length]="filteredBeneficiaryList.length"
+                        [pageSize]="rowsPerPage"
+                        [pageSizeOptions]="[rowsPerPage]"
+                        (page)="pageChanged($event)"
+                      >
                       </mat-paginator>
                     </td>
                   </tr>

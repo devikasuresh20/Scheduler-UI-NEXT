@@ -1,50 +1,111 @@
 <div class="container-fluid">
   <div class="row m-b-20">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-      <h4 class="f-s-b m-t-20 m-b-20">{{currentLanguageSet?.sMSTemplateList}}</h4>
+      <h4 class="f-s-b m-t-20 m-b-20">
+        {{ currentLanguageSet?.sMSTemplateList }}
+      </h4>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 table-responsive">
-      <table mat-table [dataSource]="templateList" class="table table-striped" aria-describedby="">
-        <!-- Column definitions --> 
-       <ng-container matColumnDef="sNo"> 
-       <th mat-header-cell *matHeaderCellDef>{{ currentLanguageSet?.sNo }}</th>
-        <td mat-cell *matCellDef="let element"> <strong>{{ element.sNo }}</strong> </td> 
-       </ng-container>
-        <ng-container matColumnDef="templateName"> 
-       <th mat-header-cell *matHeaderCellDef>{{ currentLanguageSet?.templateName }}</th> 
-       <td mat-cell *matCellDef="let element">{{ element.smsTemplateName }}</td> 
-       </ng-container>
-        <ng-container matColumnDef="templateType">
-        <th mat-header-cell *matHeaderCellDef>{{ currentLanguageSet?.templateType }}</th> 
-       <td mat-cell *matCellDef="let element">{{ element.smsType?.smsType }}</td> 
-       </ng-container>
-        <ng-container matColumnDef="template">
-        <th mat-header-cell *matHeaderCellDef>{{ currentLanguageSet?.template }}</th>
-        <td mat-cell *matCellDef="let element">{{ element.smsTemplate }}</td>
+      <table
+        mat-table
+        [dataSource]="templateList"
+        class="table table-striped"
+        aria-describedby=""
+      >
+        <!-- Column definitions -->
+        <ng-container matColumnDef="sNo">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ currentLanguageSet?.sNo }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <strong>{{ element.sNo }}</strong>
+          </td>
         </ng-container>
-        <ng-container matColumnDef="view"> 
-       <th mat-header-cell *matHeaderCellDef>{{ currentLanguageSet?.view }}</th>
-        <td mat-cell *matCellDef="let element" class="norecord"> 
-       <mat-icon class="mat-icon material-icons cursorPointer" role="img" aria-hidden="true" style="color:gray" (click)="viewFullSMSTemplate(element)">visibility</mat-icon> </td>
-       </ng-container>
+        <ng-container matColumnDef="templateName">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ currentLanguageSet?.templateName }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.smsTemplateName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="templateType">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ currentLanguageSet?.templateType }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.smsType?.smsType }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="template">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ currentLanguageSet?.template }}
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.smsTemplate }}</td>
+        </ng-container>
+        <ng-container matColumnDef="view">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ currentLanguageSet?.view }}
+          </th>
+          <td mat-cell *matCellDef="let element" class="norecord">
+            <mat-icon
+              class="mat-icon material-icons cursorPointer"
+              role="img"
+              aria-hidden="true"
+              style="color: gray"
+              (click)="viewFullSMSTemplate(element)"
+              >visibility</mat-icon
+            >
+          </td>
+        </ng-container>
         <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef>{{ currentLanguageSet?.action }}</th> 
-       <td mat-cell *matCellDef="let element">
-        <button *ngIf="!element.deleted" mat-raised-button color="primary" class="pull-right m-r-0" type="button" (click)="activateDeactivate(element, true)">{{ currentLanguageSet?.deactivate }}</button> 
-       <button *ngIf="element.deleted" mat-raised-button color="primary" class="pull-right m-r-0" type="button" (click)="activateDeactivate(element, false)">{{ currentLanguageSet?.activate }}</button> 
-       </td> 
-       </ng-container>
-       <ng-container matColumnDef="createNewSMSTemplate">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let item"> <button mat-raised-button color="primary" class="pull-right m-r-0" type="button" (click)="createNewSMSTemplate()">{{ currentLanguageSet?.createNewSMSTemplate }}</button>
-        </td> 
-       </ng-container>
-        <!-- Header and Row Definitions --> 
-       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr> <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        <!-- Footer Definitions --> 
-       <tr mat-footer-row *matFooterRowDef="['createNewSMSTemplate']"></tr>
-       </table>
-       <mat-paginator
+          <th mat-header-cell *matHeaderCellDef>
+            {{ currentLanguageSet?.action }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <button
+              *ngIf="!element.deleted"
+              mat-raised-button
+              color="primary"
+              class="pull-right m-r-0"
+              type="button"
+              (click)="activateDeactivate(element, true)"
+            >
+              {{ currentLanguageSet?.deactivate }}
+            </button>
+            <button
+              *ngIf="element.deleted"
+              mat-raised-button
+              color="primary"
+              class="pull-right m-r-0"
+              type="button"
+              (click)="activateDeactivate(element, false)"
+            >
+              {{ currentLanguageSet?.activate }}
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="createNewSMSTemplate">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let item">
+            <button
+              mat-raised-button
+              color="primary"
+              class="pull-right m-r-0"
+              type="button"
+              (click)="createNewSMSTemplate()"
+            >
+              {{ currentLanguageSet?.createNewSMSTemplate }}
+            </button>
+          </td>
+        </ng-container>
+        <!-- Header and Row Definitions -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <!-- Footer Definitions -->
+        <tr mat-footer-row *matFooterRowDef="['createNewSMSTemplate']"></tr>
+      </table>
+      <mat-paginator
         [pageSizeOptions]="[5, 10, 20]"
         [pageSize]="5"
         showFirstLastButtons

@@ -1,24 +1,59 @@
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-  <h4>{{currentLanguageSet?.chiefComplaintReport}}</h4>
+  <h4>{{ currentLanguageSet?.chiefComplaintReport }}</h4>
 </div>
 <div class="m-b-10">
-  <form [formGroup]='chiefComplaintForm'>
+  <form [formGroup]="chiefComplaintForm">
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-      <input matInput [matDatepicker]="startDatePicker" class="width100" placeholder="{{ currentLanguageSet?.startDate }}"
-         name="startDate" id="startDate" formControlName="startDate" (dateChange)="checkEndDate()" [max]="maxEndDate" readonly required>
-      <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+      <input
+        matInput
+        [matDatepicker]="startDatePicker"
+        class="width100"
+        placeholder="{{ currentLanguageSet?.startDate }}"
+        name="startDate"
+        id="startDate"
+        formControlName="startDate"
+        (dateChange)="checkEndDate()"
+        [max]="maxEndDate"
+        readonly
+        required
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="startDatePicker"
+      ></mat-datepicker-toggle>
       <mat-datepicker #startDatePicker></mat-datepicker>
     </div>
 
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3"> 
-      <input matInput [matDatepicker]="endDatePicker" class="width100" restrictTyping placeholder="{{ currentLanguageSet?.endDate }}"
-       name="endDate" id="endDate" formControlName="endDate"
-        [min]="minEndDate" [max]="maxEndDate" readonly required> 
-        <mat-datepicker-toggle matSuffix [for]="endDatePicker">
-        </mat-datepicker-toggle> <mat-datepicker #endDatePicker>
-      </mat-datepicker></div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+      <input
+        matInput
+        [matDatepicker]="endDatePicker"
+        class="width100"
+        restrictTyping
+        placeholder="{{ currentLanguageSet?.endDate }}"
+        name="endDate"
+        id="endDate"
+        formControlName="endDate"
+        [min]="minEndDate"
+        [max]="maxEndDate"
+        readonly
+        required
+      />
+      <mat-datepicker-toggle matSuffix [for]="endDatePicker">
+      </mat-datepicker-toggle>
+      <mat-datepicker #endDatePicker> </mat-datepicker>
+    </div>
   </form>
 </div>
 <div class="m-t-20 col-xs-12 col-sm-12 col-md-12 col-lg-12 pull-right">
-  <button mat-raised-button class="pull-right" color="accent" type="submit" [disabled]="!chiefComplaintForm.valid" (click)='downloadReport(true)'>{{currentLanguageSet?.download}}</button>
+  <button
+    mat-raised-button
+    class="pull-right"
+    color="accent"
+    type="submit"
+    [disabled]="!chiefComplaintForm.valid"
+    (click)="downloadReport(true)"
+  >
+    {{ currentLanguageSet?.download }}
+  </button>
 </div>

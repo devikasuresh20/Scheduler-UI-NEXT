@@ -1,23 +1,47 @@
 <div class="container-fluid">
   <div class="col-xs-12 m-t-5 m-b-5">
-    <button class="pull-left" type="button" mat-icon-button (click)="drawer.toggle()">
+    <button
+      class="pull-left"
+      type="button"
+      mat-icon-button
+      (click)="drawer.toggle()"
+    >
       <mat-icon> compare_arrows </mat-icon>
     </button>
-    <button class="pull-right" type="button" mat-raised-button color="primary" (click)="backToStaffPage()">
-      {{currentLanguageSet?.back}}
+    <button
+      class="pull-right"
+      type="button"
+      mat-raised-button
+      color="primary"
+      (click)="backToStaffPage()"
+    >
+      {{ currentLanguageSet?.back }}
     </button>
   </div>
   <mat-drawer-container class="example-container m-t-10" autosize>
     <mat-drawer #drawer class="example-sidenav" mode="side" opened="true">
       <div class="container-fluid">
         <div class="row m-t-10">
-          <img class="center" src="assets/images/Avatar-Profile_50X50.png" alt="Avatar Profile">
+          <img
+            class="center"
+            src="assets/images/Avatar-Profile_50X50.png"
+            alt="Avatar Profile"
+          />
           <div class="col-xs-12 box m-t-20 textAlign">
-            <h4><strong>{{specialistData?.titleName+ specialistData?.firstName + " " + specialistData?.lastName}}</strong></h4>
-            <h5><strong>{{specialistData?.specialization}}</strong></h5>
-            <h5>{{specialistData?.emailID}}</h5>
-            <h5>{{specialistData?.contactNumber}}</h5>
-            <h5>{{specialistData?.gender}}</h5>
+            <h4>
+              <strong>{{
+                specialistData?.titleName +
+                  specialistData?.firstName +
+                  " " +
+                  specialistData?.lastName
+              }}</strong>
+            </h4>
+            <h5>
+              <strong>{{ specialistData?.specialization }}</strong>
+            </h5>
+            <h5>{{ specialistData?.emailID }}</h5>
+            <h5>{{ specialistData?.contactNumber }}</h5>
+            <h5>{{ specialistData?.gender }}</h5>
           </div>
         </div>
       </div>
@@ -26,15 +50,14 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-xs-12">
-              <mat-tab-group (focusChange)="tabChanged($event)">
-                <mat-tab label="Timesheet">
-                    <app-timesheet [getChangedTab]='getChangedTab' ></app-timesheet>
-                </mat-tab>
-                <mat-tab label="Appointment View">
-                  <app-appointment-view></app-appointment-view>
-
-                  </mat-tab>
-              </mat-tab-group>
+            <mat-tab-group (focusChange)="tabChanged($event)">
+              <mat-tab label="Timesheet">
+                <app-timesheet [getChangedTab]="getChangedTab"></app-timesheet>
+              </mat-tab>
+              <mat-tab label="Appointment View">
+                <app-appointment-view></app-appointment-view>
+              </mat-tab>
+            </mat-tab-group>
           </div>
         </div>
       </div>

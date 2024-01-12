@@ -1,51 +1,48 @@
 /*
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
-*
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
-*
-* This file is part of AMRIT.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see https://www.gnu.org/licenses/.
-*/
-import { Directive, ElementRef, Attribute, HostListener, Input } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+ * AMRIT – Accessible Medical Records via Integrated Technology
+ * Integrated EHR (Electronic Health Records) Solution
+ *
+ * Copyright (C) "Piramal Swasthya Management and Research Institute"
+ *
+ * This file is part of AMRIT.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
+ */
+import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
-  selector: '[allowMax][formControlName],[allowMax][formControl],[allowMax][ngModel],[allowMax]'
+  selector:
+    '[appAllowMax][formControlName],[appAllowMax][formControl],[appAllowMax][ngModel],[appAllowMax]',
 })
-export class NumberValidator {
-  @Input('allowMax')
+export class NumberValidatorDirective {
+  @Input('appAllowMax')
   public max!: number;
 
-  constructor(private elementRef: ElementRef) { }
+  constructor(private elementRef: ElementRef) {}
 
   validate(input: any) {
-    let max = this.max;
+    const max = this.max;
 
-    if (+input <= +max)
-      return true;
-    else
-      return false;
+    if (+input <= +max) return true;
+    else return false;
   }
 
   @HostListener('input', ['$event'])
   onInput(event: any) {
-    let value = event.target.value;
+    const value = event.target.value;
 
-    if (!this.validate(value))
-      event.target.value = this.lastValue;
+    if (!this.validate(value)) event.target.value = this.lastValue;
 
     this.lastValue = event.target.value;
   }
@@ -55,5 +52,4 @@ export class NumberValidator {
   onFocus(event: any) {
     this.lastValue = event.target.value;
   }
-
 }

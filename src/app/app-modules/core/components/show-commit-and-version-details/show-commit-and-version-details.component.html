@@ -1,31 +1,32 @@
 <div class="row title">
-  <h4> {{currentLanguageSet?.versionDetails}} </h4>
-  <button class="pull-right exit"  mat-icon-button mat-dialog-close>
-    <mat-icon class="md-24">{{currentLanguageSet?.close}}</mat-icon>
+  <h4>{{ currentLanguageSet?.versionDetails }}</h4>
+  <button class="pull-right exit" mat-icon-button mat-dialog-close>
+    <mat-icon class="md-24">{{ currentLanguageSet?.close }}</mat-icon>
   </button>
 </div>
 <div class="container-fluid">
   <mat-dialog-content>
     <div class="table-responsive">
       <table class="table table-striped">
-        <caption></caption> <!-- Table discription SonarQube bug fix -->
+        <caption></caption>
+        <!-- Table discription SonarQube bug fix -->
         <thead>
           <tr>
             <th id=""></th>
-            <th id="API"> {{currentLanguageSet?.aPI}} </th>
-            <th id="UI"> {{currentLanguageSet?.uI}} </th>
+            <th id="API">{{ currentLanguageSet?.aPI }}</th>
+            <th id="UI">{{ currentLanguageSet?.uI }}</th>
           </tr>
         </thead>
         <tbody>
           <tr class="table-hover">
-            <th id="Version">{{currentLanguageSet?.version}}</th>
-            <td> {{input.commitDetailsAPI.version}}</td>
-            <td>{{input.commitDetailsUI.version}} </td>
+            <th id="Version">{{ currentLanguageSet?.version }}</th>
+            <td>{{ input.commitDetailsAPI.version }}</td>
+            <td>{{ input.commitDetailsUI.version }}</td>
           </tr>
           <tr class="table-hover">
-            <th id="Commit">{{currentLanguageSet?.commit}}</th>
-            <td> {{input.commitDetailsAPI.commit}}</td>
-            <td>{{input.commitDetailsUI.commit}} </td>
+            <th id="Commit">{{ currentLanguageSet?.commit }}</th>
+            <td>{{ input.commitDetailsAPI.commit }}</td>
+            <td>{{ input.commitDetailsUI.commit }}</td>
           </tr>
         </tbody>
       </table>

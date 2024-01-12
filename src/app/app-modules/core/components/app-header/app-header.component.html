@@ -2,73 +2,113 @@
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-navbar, #main-navbar" aria-expanded="false">
-        <span class="sr-only">{{currentLanguageSet?.togglenavigation}}</span>
+      <button
+        type="button"
+        class="navbar-toggle collapsed"
+        data-toggle="collapse"
+        data-target="#top-navbar, #main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">{{ currentLanguageSet?.togglenavigation }}</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand">
-        <img src="assets/images/logo.png" alt="Logo">
+        <img src="assets/images/logo.png" alt="Logo" />
       </a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="top-navbar">
       <ul class="nav navbar-nav navbar-right">
-
-        <li *ngIf="isAuthenticated" class="logout cursorPointer" matTooltip="{{currentLanguageSet?.logout}}">
-          <a (click)="getSwymedLogout()">
+        <li
+          *ngIf="isAuthenticated"
+          class="logout cursorPointer"
+          matTooltip="{{ currentLanguageSet?.logout }}"
+        >
+          <a
+            (click)="getSwymedLogout()"
+            tabindex="0"
+            (keydown)="handleKeyDownSwymed($event)"
+          >
             <span class="logoutIcon"></span>
-            <span style="color:#ffffff;" class="hidden-sm hidden-md hidden-lg">{{currentLanguageSet?.logout}}</span>
+            <span
+              style="color: #ffffff"
+              class="hidden-sm hidden-md hidden-lg"
+              >{{ currentLanguageSet?.logout }}</span
+            >
           </a>
         </li>
 
-        <li *ngIf="servicePoint" class="servicePoint cursorPointer" [routerLink]="'/servicePoint'" matTooltip="{{currentLanguageSet?.servicePoint}}">
+        <li
+          *ngIf="servicePoint"
+          class="servicePoint cursorPointer"
+          [routerLink]="'/servicePoint'"
+          matTooltip="{{ currentLanguageSet?.servicePoint }}"
+        >
           <a>
             <img src="assets/images/placeholder.png" alt="placeholder" />
-            <span style="color:#d9d9d9">{{currentLanguageSet?.servicePoint}}
-              <span style="color:#d9d9d9">:</span>
-            <span style="color:#ffffff;">{{ servicePoint | titlecase}}</span>
+            <span style="color: #d9d9d9"
+              >{{ currentLanguageSet?.servicePoint }}
+              <span style="color: #d9d9d9">:</span>
+              <span style="color: #ffffff">{{ servicePoint | titlecase }}</span>
             </span>
           </a>
         </li>
         <li class="cursorPointer">
-          <span class="fa fa-question-circle helpAlign" matTooltip="
-          {{currentLanguageSet?.help}}" alt="Help" [matMenuTriggerFor]="knowAboutUs"></span>
+          <span
+            class="fa fa-question-circle helpAlign"
+            matTooltip="
+          {{ currentLanguageSet?.help }}"
+            alt="Help"
+            [matMenuTriggerFor]="knowAboutUs"
+          ></span>
         </li>
-        <mat-menu #knowAboutUs x-position="before"  class="m-t-40">
+        <mat-menu #knowAboutUs x-position="before" class="m-t-40">
           <mat-list class="p-t-0">
-            <mat-list-item (click)='showVersionAndCommitDetails()'>{{currentLanguageSet?.version}}:{{versionUI}}</mat-list-item>
-            <mat-list-item><a target="_blank" href={{license}} rel="noopener noreferrer">{{currentLanguageSet?.licenseInfo}}</a>
+            <mat-list-item (click)="showVersionAndCommitDetails()"
+              >{{ currentLanguageSet?.version }}:{{ versionUI }}</mat-list-item
+            >
+            <mat-list-item
+              ><a
+                target="_blank"
+                href="{{ license }}"
+                rel="noopener noreferrer"
+                >{{ currentLanguageSet?.licenseInfo }}</a
+              >
             </mat-list-item>
           </mat-list>
-          </mat-menu>
-          <li *ngIf="userName" matTooltip="{{currentLanguageSet?.user}}">
-            <a>
-              <img src="assets/images/user1.png" alt="user1" />
-              <span style="color:#d9d9d9"> {{currentLanguageSet?.user}}
-              <span style="color:#d9d9d9">:</span>
-              <span style="color:#ffffff;">{{ userName | titlecase }}</span>
-              </span>
-            </a>
-          </li>
-          <li class="alignDropDown">
-            <select class="form-control drop-arrow border-radius-20 height-30 width120px pull-right" name="app_language"
-            [(ngModel)]="app_language" (change)="changeLanguage(app_language)">
-            <option *ngFor="let language of languageArray" [value]="language.languageName">{{language.languageName}}
+        </mat-menu>
+        <li *ngIf="userName" matTooltip="{{ currentLanguageSet?.user }}">
+          <a>
+            <img src="assets/images/user1.png" alt="user1" />
+            <span style="color: #d9d9d9">
+              {{ currentLanguageSet?.user }}
+              <span style="color: #d9d9d9">:</span>
+              <span style="color: #ffffff">{{ userName | titlecase }}</span>
+            </span>
+          </a>
+        </li>
+        <li class="alignDropDown">
+          <select
+            class="form-control drop-arrow border-radius-20 height-30 width120px pull-right"
+            name="app_language"
+            [(ngModel)]="app_language"
+            (change)="changeLanguage(app_language)"
+          >
+            <option
+              *ngFor="let language of languageArray"
+              [value]="language.languageName"
+            >
+              {{ language.languageName }}
             </option>
-
           </select>
-          </li>
+        </li>
 
-          <li class="alignWord">
-
-            <span>{{currentLanguageSet?.SelectLanguage}} :</span>
-  
-           
-            
-          </li>
+        <li class="alignWord">
+          <span>{{ currentLanguageSet?.SelectLanguage }} :</span>
+        </li>
       </ul>
     </div>
     <!-- /.navbar-collapse -->
@@ -78,39 +118,81 @@
 
 <div *ngIf="showRoles" class="container-fluid">
   <div class="collapse navbar-collapse" id="main-navbar">
-    <ul class="nav navbar-nav" *ngFor="let item of filteredNavigation;let isLast=last;">
-      <li *ngIf="item.role == 'Supervisor'">
-        <button mat-button [matMenuTriggerFor]="items2"> {{item.label}}
+    <ul
+      class="nav navbar-nav"
+      *ngFor="let item of filteredNavigation; let isLast = last"
+    >
+      <li *ngIf="item.role === 'Supervisor'">
+        <button mat-button [matMenuTriggerFor]="items2">
+          {{ item.label }}
           <span class="caret"></span>
         </button>
-        <mat-menu class="supervisor-menu" #items2="matMenu" yPosition='below' xPosition="after" [overlapTrigger]='false'>
-          <button mat-menu-item *ngFor="let value of item?.work " [routerLink]="value.link" routerLinkActive="active">
-            {{value.label}}</button>
+        <mat-menu
+          class="supervisor-menu"
+          #items2="matMenu"
+          yPosition="below"
+          xPosition="after"
+          [overlapTrigger]="false"
+        >
+          <button
+            mat-menu-item
+            *ngFor="let value of item?.work"
+            [routerLink]="value.link"
+            routerLinkActive="active"
+          >
+            {{ value.label }}
+          </button>
         </mat-menu>
       </li>
 
-
-      <li *ngIf="item.role == 'TC Specialist'">
-        <button mat-button [matMenuTriggerFor]="items3"> {{item.label}}
+      <li *ngIf="item.role === 'TC Specialist'">
+        <button mat-button [matMenuTriggerFor]="items3">
+          {{ item.label }}
           <span class="caret"></span>
         </button>
-        <mat-menu class="specialist-menu" #items3="matMenu" yPosition='below' xPosition="after" [overlapTrigger]='false'>
-          <button mat-menu-item (click)="redirectToSpecialistWorklist()"> {{currentLanguageSet?.worklist}} </button>
-          <button mat-menu-item *ngFor="let value of item?.work " [routerLink]="value.link" routerLinkActive="active">
-            {{value.label}}</button>
+        <mat-menu
+          class="specialist-menu"
+          #items3="matMenu"
+          yPosition="below"
+          xPosition="after"
+          [overlapTrigger]="false"
+        >
+          <button mat-menu-item (click)="redirectToSpecialistWorklist()">
+            {{ currentLanguageSet?.worklist }}
+          </button>
+          <button
+            mat-menu-item
+            *ngFor="let value of item?.work"
+            [routerLink]="value.link"
+            routerLinkActive="active"
+          >
+            {{ value.label }}
+          </button>
         </mat-menu>
       </li>
 
       <li *ngFor="let role of reportNavigation">
-        <button mat-button [matMenuTriggerFor]="items4"> {{role.label}}
+        <button mat-button [matMenuTriggerFor]="items4">
+          {{ role.label }}
           <span class="caret"></span>
         </button>
-        <mat-menu class="supervisor-menu" #items4="matMenu" yPosition='below' xPosition="after" [overlapTrigger]='false'>
-          <button mat-menu-item *ngFor="let value of role?.work " [routerLink]="value.link" routerLinkActive="active">
-            {{value.label}}</button>
+        <mat-menu
+          class="supervisor-menu"
+          #items4="matMenu"
+          yPosition="below"
+          xPosition="after"
+          [overlapTrigger]="false"
+        >
+          <button
+            mat-menu-item
+            *ngFor="let value of role?.work"
+            [routerLink]="value.link"
+            routerLinkActive="active"
+          >
+            {{ value.label }}
+          </button>
         </mat-menu>
       </li>
-
     </ul>
   </div>
 </div>

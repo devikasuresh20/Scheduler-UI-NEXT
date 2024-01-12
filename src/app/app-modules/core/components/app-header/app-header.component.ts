@@ -1,24 +1,24 @@
 /*
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
-*
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
-*
-* This file is part of AMRIT.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see https://www.gnu.org/licenses/.
-*/
+ * AMRIT – Accessible Medical Records via Integrated Technology
+ * Integrated EHR (Electronic Health Records) Solution
+ *
+ * Copyright (C) "Piramal Swasthya Management and Research Institute"
+ *
+ * This file is part of AMRIT.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
+ */
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -31,17 +31,17 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-header',
   templateUrl: './app-header.component.html',
-  styleUrls: ['./app-header.component.css']
+  styleUrls: ['./app-header.component.css'],
 })
 export class AppHeaderComponent implements OnInit {
-  @Input('showRoles')
+  @Input()
   showRoles!: boolean;
-  language_file_path: any = "./assets/";
-  app_language: any = "English";
+  language_file_path: any = './assets/';
+  app_language: any = 'English';
   currentLanguageSet: any;
   languageArray: any;
   status: any;
-  isConnected:boolean=true;
+  isConnected = true;
   servicePoint: any;
   userName: any;
   isAuthenticated!: boolean;
@@ -49,48 +49,49 @@ export class AppHeaderComponent implements OnInit {
   filteredNavigation: any;
   navigation: any;
   reportNavigation: any;
-  license:any;
+  license: any;
 
   constructor(
     private router: Router,
     private auth: AuthService,
     public httpServiceService: HttpServiceService,
     private confirmationService: ConfirmationService,
-    private dialog: MatDialog) { }
-  
+    private dialog: MatDialog,
+  ) {}
+
   ngOnInit() {
-    this.getUIVersionAndCommitDetails()
-     this.license = environment.licenseUrl;
+    this.getUIVersionAndCommitDetails();
+    this.license = environment.licenseUrl;
     this.servicePoint = localStorage.getItem('tm-servicePointName');
     this.userName = localStorage.getItem('tm-userName');
     this.fetchLanguageSet();
-    this.isAuthenticated = sessionStorage.getItem('tm-isAuthenticated') == 'true'
-    
+    this.isAuthenticated =
+      sessionStorage.getItem('tm-isAuthenticated') == 'true';
   }
 
   fetchLanguageSet() {
-    this.httpServiceService.fetchLanguageSet().subscribe(languageRes => {
+    this.httpServiceService.fetchLanguageSet().subscribe((languageRes) => {
       this.languageArray = languageRes;
       this.getLanguage();
-    })
-    console.log("language array" + this.languageArray);
-
+    });
+    console.log('language array' + this.languageArray);
   }
 
   changeLanguage(language: any) {
-    
-    this.httpServiceService.getLanguage(this.language_file_path+language+".json").subscribe({next:(response:any) => {
-      if(response){
-        this.languageSuccessHandler(response,language)
-      }else{
-        alert(this.currentLanguageSet.langNotDefined)
-      }      
-    },
-    error:error => {
-      alert(this.currentLanguageSet.comingUpWithThisLang + " " + language);
-      
-    }
-  });
+    this.httpServiceService
+      .getLanguage(this.language_file_path + language + '.json')
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.languageSuccessHandler(response, language);
+          } else {
+            alert(this.currentLanguageSet.langNotDefined);
+          }
+        },
+        error: (error) => {
+          alert(this.currentLanguageSet.comingUpWithThisLang + ' ' + language);
+        },
+      });
   }
 
   getLanguage() {
@@ -102,9 +103,9 @@ export class AppHeaderComponent implements OnInit {
   }
 
   languageSuccessHandler(response: any, language: any) {
-    console.log("language is ", response);
+    console.log('language is ', response);
     if (response == undefined) {
-      alert(this.currentLanguageSet.langNotDefined)
+      alert(this.currentLanguageSet.langNotDefined);
     }
 
     if (response[language] !== undefined) {
@@ -114,143 +115,167 @@ export class AppHeaderComponent implements OnInit {
         this.languageArray.forEach((item: any) => {
           if (item.languageName == language) {
             this.app_language = language;
-          
           }
-
         });
       } else {
         this.app_language = language;
       }
-     
+
       this.httpServiceService.getCurrentLanguage(response[language]);
       this.rolenavigation();
     } else {
-      alert(this.currentLanguageSet.comingUpWithThisLang + " " + language);
+      alert(this.currentLanguageSet.comingUpWithThisLang + ' ' + language);
     }
   }
 
-  rolenavigation(){
-  this.navigation = [
-    {
-      role: 'Supervisor',
-      label: this.currentLanguageSet.supervisor,
-       work: [
-        // { link: ['/telemedicine/timesheet', 'Supervisor'], label: 'Timesheet' },
-        { link: '/telemedicine/myStaff', label: this.currentLanguageSet.myStaff },
-        { link: 'specialization/dayview', label: this.currentLanguageSet.dayView },
-        { link: 'smstemplate', label: this.currentLanguageSet.sMSTemplate }
-        // { link: 'appointment/view', label: 'Appointment View' },
+  rolenavigation() {
+    this.navigation = [
+      {
+        role: 'Supervisor',
+        label: this.currentLanguageSet.supervisor,
+        work: [
+          // { link: ['/telemedicine/timesheet', 'Supervisor'], label: 'Timesheet' },
+          {
+            link: '/telemedicine/myStaff',
+            label: this.currentLanguageSet.myStaff,
+          },
+          {
+            link: 'specialization/dayview',
+            label: this.currentLanguageSet.dayView,
+          },
+          { link: 'smstemplate', label: this.currentLanguageSet.sMSTemplate },
+          // { link: 'appointment/view', label: 'Appointment View' },
+        ],
+      },
+      {
+        role: 'TC Specialist',
+        label: this.currentLanguageSet.tCSpecialist,
+        work: [
+          {
+            link: ['/telemedicine/timesheet', 'TC Specialist'],
+            label: this.currentLanguageSet.timesheet,
+          },
+        ],
+      },
+    ];
 
-      ]
-    },
-    {
-      role: "TC Specialist",
-      label: this.currentLanguageSet.tCSpecialist,
-       work: [
-        { link: ['/telemedicine/timesheet', 'TC Specialist'], label: this.currentLanguageSet.timesheet }
-      ]
+    this.reportNavigation = [
+      {
+        role: 'Reports',
+        label: this.currentLanguageSet.report,
+        work: [
+          {
+            link: 'chiefComplaintReport',
+            label: this.currentLanguageSet.chiefComplaintReport,
+          },
+          {
+            link: 'totalConsultationReport',
+            label: this.currentLanguageSet.totalConsultationReport,
+          },
+          {
+            link: 'consultationReport',
+            label: this.currentLanguageSet.consultationReport,
+          },
+          {
+            link: 'monthlyReport',
+            label: this.currentLanguageSet.monthlyReport,
+          },
+          { link: 'dailyReport', label: this.currentLanguageSet.dailyReport },
+        ],
+      },
+    ];
+
+    if (this.showRoles) {
+      const tmRoles = localStorage.getItem('roles');
+      this.roles = tmRoles !== null ? JSON.parse(tmRoles) : String;
+      if (this.roles) {
+        this.filteredNavigation = this.navigation.filter((item: any) => {
+          return this.roles.includes(item.role);
+        });
+      }
+      console.log(' this.filteredNavigation', this.filteredNavigation);
     }
-
-  ];
-
-  this.reportNavigation = [{
-    role: 'Reports',
-    label: this.currentLanguageSet.report,
-    work: [
-      { link: 'chiefComplaintReport', label: this.currentLanguageSet.chiefComplaintReport },
-      { link: 'totalConsultationReport', label: this.currentLanguageSet.totalConsultationReport },
-      { link: 'consultationReport', label: this.currentLanguageSet.consultationReport },
-      { link: 'monthlyReport', label: this.currentLanguageSet.monthlyReport },
-      { link: 'dailyReport', label: this.currentLanguageSet.dailyReport }
-    ]
-  }]
-
-  if (this.showRoles) {
-    let tmRoles = localStorage.getItem('roles');
-    this.roles = tmRoles !== null ? JSON.parse(tmRoles): String
-    if (this.roles) {
-      this.filteredNavigation = this.navigation.filter((item: any) => {
-        return this.roles.includes(item.role);
-      })
-    }
-    console.log(' this.filteredNavigation', this.filteredNavigation);
-  }
   }
 
   DataSync() {
-    this.router.navigate(['/datasync'])
+    this.router.navigate(['/datasync']);
   }
 
   redirectToSpecialistWorklist() {
-    let returnUrl! :any;
-    returnUrl = sessionStorage.getItem('tm-return');
+    const returnUrl: any = sessionStorage.getItem('tm-return');
     this.router.navigateByUrl(returnUrl);
   }
 
   returnToMMU: any;
   logout() {
-    let loginUrl ! : any ;
-    loginUrl = sessionStorage.getItem('tm-fallback');
-    this.auth.logout().subscribe({next:(res: any) => {
-      this.auth.removeExternalSessionData();
-      this.router.navigateByUrl(loginUrl);
-    },
-    error: (error: any) => {
-      this.auth.removeExternalSessionData();
-      this.router.navigateByUrl(loginUrl);
-  }});
+    const loginUrl: any = sessionStorage.getItem('tm-fallback');
+    this.auth.logout().subscribe({
+      next: (res: any) => {
+        this.auth.removeExternalSessionData();
+        this.router.navigateByUrl(loginUrl);
+      },
+      error: (error: any) => {
+        this.auth.removeExternalSessionData();
+        this.router.navigateByUrl(loginUrl);
+      },
+    });
   }
- 
+
+  handleKeyDownSwymed(event: KeyboardEvent): void {
+    if (event.key == 'Enter' || event.key == 'Spacebar' || event.key == ' ') {
+      this.getSwymedLogout();
+    }
+  }
+
   getSwymedLogout() {
     this.auth.getSwymedLogout().subscribe((res: any) => {
       window.location.href = res.data.response;
       this.logout();
-    })
+    });
   }
 
   commitDetailsUI: any;
-  versionUI: any
+  versionUI: any;
   getUIVersionAndCommitDetails() {
-    let commitDetailsPath: any = "assets/git-version.json";
-    this.auth.getUIVersionAndCommitDetails(commitDetailsPath).subscribe({next:(res) => {
-      console.log('res', res);
-      this.commitDetailsUI = res
-      this.versionUI = this.commitDetailsUI['version']
-    }, 
-    error:err => {
-      console.log('err', err);
-
-  }})
+    const commitDetailsPath: any = 'assets/git-version.json';
+    this.auth.getUIVersionAndCommitDetails(commitDetailsPath).subscribe({
+      next: (res) => {
+        console.log('res', res);
+        this.commitDetailsUI = res;
+        this.versionUI = this.commitDetailsUI['version'];
+      },
+      error: (err) => {
+        console.log('err', err);
+      },
+    });
   }
   showVersionAndCommitDetails() {
-    this.auth.getAPIVersionAndCommitDetails().subscribe({next:(res: any) => {
-      if (res.statusCode == 200) {
-        this.constructAPIAndUIDetails(res.data);
-      }
-    }, 
-    error:err => {
-  }})
+    this.auth.getAPIVersionAndCommitDetails().subscribe({
+      next: (res: any) => {
+        if (res.statusCode == 200) {
+          this.constructAPIAndUIDetails(res.data);
+        }
+      },
+    });
   }
   constructAPIAndUIDetails(apiVersionAndCommitDetails: any) {
-    let data = {
+    const data = {
       commitDetailsUI: {
         version: this.commitDetailsUI['version'],
-        commit: this.commitDetailsUI['commit']
+        commit: this.commitDetailsUI['commit'],
       },
       commitDetailsAPI: {
         version: apiVersionAndCommitDetails['git.build.version'] || 'NA',
-        commit: apiVersionAndCommitDetails['git.commit.id'] || 'NA'
-      }
-    }
+        commit: apiVersionAndCommitDetails['git.commit.id'] || 'NA',
+      },
+    };
     if (data) {
-      this.showData(data)
+      this.showData(data);
     }
   }
   showData(versionData: any) {
-     this.dialog.open(ShowCommitAndVersionDetailsComponent, {
-      data: versionData
+    this.dialog.open(ShowCommitAndVersionDetailsComponent, {
+      data: versionData,
     });
-
   }
-
 }

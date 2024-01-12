@@ -1,90 +1,235 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-      <h4 class="f-s-b m-t-20 m-b-20">{{heading}}</h4>
+      <h4 class="f-s-b m-t-20 m-b-20">{{ heading }}</h4>
     </div>
     <form [formGroup]="smsTemplateCreationForm">
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 box">
         <mat-form-field class="input-full-width">
-          <input autocomplete="off" mdInput defaultNull name='smsTemplateName' formControlName="smsTemplateName" placeholder="{{currentLanguageSet?.templateName}}" [readonly]="templateReadOnly" required>
+          <input
+            autocomplete="off"
+            mdInput
+            appDefaultNull
+            name="smsTemplateName"
+            formControlName="smsTemplateName"
+            placeholder="{{ currentLanguageSet?.templateName }}"
+            [readonly]="templateReadOnly"
+            required
+          />
         </mat-form-field>
       </div>
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 box">
-        <mat-select class="input-full-width" name='smsType' formControlName="smsType" placeholder="{{currentLanguageSet?.sMSType}}" [disabled]="templateReadOnly" (change)='checkSMSType()' required>
+        <mat-select
+          class="input-full-width"
+          name="smsType"
+          formControlName="smsType"
+          placeholder="{{ currentLanguageSet?.sMSType }}"
+          [disabled]="templateReadOnly"
+          (change)="checkSMSType()"
+          required
+        >
           <mat-option *ngFor="let smsType of masterSMSType" [value]="smsType">
-            {{smsType.smsType}}
+            {{ smsType.smsType }}
           </mat-option>
         </mat-select>
       </div>
       <div class="clearfix"></div>
       <div class="col-sm-12 col-md-12">
         <mat-form-field class="input-full-width">
-          <textarea mdInput defaultNull mdTextareaAutosize name='smsTemplate' formControlName="smsTemplate" maxlength="200" placeholder="{{currentLanguageSet?.sMSTemplate}}" required [readonly]="templateReadOnly"> </textarea>
-          <mat-hint align="end">{{smsTemplate ? smsTemplate?.length:0}}/200</mat-hint>
+          <textarea
+            mdInput
+            appDefaultNull
+            mdTextareaAutosize
+            name="smsTemplate"
+            formControlName="smsTemplate"
+            maxlength="200"
+            placeholder="{{ currentLanguageSet?.sMSTemplate }}"
+            required
+            [readonly]="templateReadOnly"
+          >
+          </textarea>
+          <mat-hint align="end"
+            >{{ smsTemplate ? smsTemplate?.length : 0 }}/200</mat-hint
+          >
         </mat-form-field>
       </div>
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 box" *ngIf='templateReadOnly && parametersLength > 0'>
-        <mat-select class="input-full-width" placeholder="{{currentLanguageSet?.parameter}}" formControlName="parameter" name="parameter" (change)="getSMSparameter()" required>
+      <div
+        class="col-xs-12 col-sm-6 col-md-4 col-lg-4 box"
+        *ngIf="templateReadOnly && parametersLength > 0"
+      >
+        <mat-select
+          class="input-full-width"
+          placeholder="{{ currentLanguageSet?.parameter }}"
+          formControlName="parameter"
+          name="parameter"
+          (change)="getSMSparameter()"
+          required
+        >
           <mat-option *ngFor="let parameter of parameters" [value]="parameter">
-            {{parameter}}
+            {{ parameter }}
           </mat-option>
         </mat-select>
       </div>
-      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 box" *ngIf='templateReadOnly && parametersLength > 0'>
-        <mat-select class="input-full-width" placeholder="{{currentLanguageSet?.valueType}}" name="valueType" formControlName="smsParameterType" (change)="getParameterValue()" required>
+      <div
+        class="col-xs-12 col-sm-12 col-md-4 col-lg-4 box"
+        *ngIf="templateReadOnly && parametersLength > 0"
+      >
+        <mat-select
+          class="input-full-width"
+          placeholder="{{ currentLanguageSet?.valueType }}"
+          name="valueType"
+          formControlName="smsParameterType"
+          (change)="getParameterValue()"
+          required
+        >
           <mat-option *ngFor="let type of masterSMSParameter" [value]="type">
-            {{type.smsParameterType}}
+            {{ type.smsParameterType }}
           </mat-option>
         </mat-select>
       </div>
-      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 box" *ngIf='templateReadOnly && parametersLength > 0'>
-        <mat-select class="input-full-width" placeholder="{{currentLanguageSet?.value}}" name="value" formControlName="smsParameterValue" required>
-          <mat-option *ngFor="let parameterValue of selectedParameterValues" [value]="parameterValue">
-            {{parameterValue.smsParameterName}}
+      <div
+        class="col-xs-12 col-sm-12 col-md-4 col-lg-4 box"
+        *ngIf="templateReadOnly && parametersLength > 0"
+      >
+        <mat-select
+          class="input-full-width"
+          placeholder="{{ currentLanguageSet?.value }}"
+          name="value"
+          formControlName="smsParameterValue"
+          required
+        >
+          <mat-option
+            *ngFor="let parameterValue of selectedParameterValues"
+            [value]="parameterValue"
+          >
+            {{ parameterValue.smsParameterName }}
           </mat-option>
         </mat-select>
       </div>
-      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pull-right" *ngIf='templateReadOnly && smsTemplateCreationForm.valid && !templateView'>
-        <button mat-mini-fab id='addSMSParameterTemplate' (click)=" addSMSParameterTemplate() " color="primary"><span class="material-icons ">add</span></button>
+      <div
+        class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pull-right"
+        *ngIf="
+          templateReadOnly && smsTemplateCreationForm.valid && !templateView
+        "
+      >
+        <button
+          mat-mini-fab
+          id="addSMSParameterTemplate"
+          (click)="addSMSParameterTemplate()"
+          color="primary"
+        >
+          <span class="material-icons">add</span>
+        </button>
       </div>
     </form>
 
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-10 table-responsive " *ngIf="mappedSMSParameter.length> 0">
-      
-      <table mat-table [dataSource]="mappedSMSParameter" class="table table-striped" aria-describedby=""> <!-- Column definitions -->
-        <ng-container matColumnDef="sNo"> <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>{{ currentLanguageSet?.sNo }}</th>
-        <td mat-cell *matCellDef="let element"> <strong>{{ element.sNo }}</strong> </td> 
-       </ng-container>
+    <div
+      class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-10 table-responsive"
+      *ngIf="mappedSMSParameter.length > 0"
+    >
+      <table
+        mat-table
+        [dataSource]="mappedSMSParameter"
+        class="table table-striped"
+        aria-describedby=""
+      >
+        <!-- Column definitions -->
+        <ng-container matColumnDef="sNo">
+          <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>
+            {{ currentLanguageSet?.sNo }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <strong>{{ element.sNo }}</strong>
+          </td>
+        </ng-container>
         <ng-container matColumnDef="smsParameterName">
-        <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>{{ currentLanguageSet?.parameter }}</th>
-        <td mat-cell *matCellDef="let element">{{ element.smsParameterName }}</td> 
-       </ng-container>
-        <ng-container matColumnDef="smsParameterType"> <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>{{ currentLanguageSet?.valueType }}</th>
-        <td mat-cell *matCellDef="let element">{{ element.smsParameterType }}</td> 
-       </ng-container>
-        <ng-container matColumnDef="smsParameterValue"> <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>{{ currentLanguageSet?.value }}</th> 
-       <td mat-cell *matCellDef="let element">{{ element.smsParameterValue }}</td>
+          <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>
+            {{ currentLanguageSet?.parameter }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.smsParameterName }}
+          </td>
         </ng-container>
-        <ng-container matColumnDef="action"> 
-       <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>{{ currentLanguageSet?.action }}</th> 
-       <td mat-cell *matCellDef="let element"> 
-       <ng-container *ngIf='!templateView'> 
-       <button mat-mini-fab id='removeParam' (click)="removeSMSParameterTemplate(element, element.sNo)" color="warn">
-        <span class="material-icons">close</span> </button> </ng-container> </td>
+        <ng-container matColumnDef="smsParameterType">
+          <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>
+            {{ currentLanguageSet?.valueType }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.smsParameterType }}
+          </td>
         </ng-container>
-        <!-- Header and Row Definitions --> 
-       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr> 
-       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-       </table>
+        <ng-container matColumnDef="smsParameterValue">
+          <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>
+            {{ currentLanguageSet?.value }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.smsParameterValue }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+          <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>
+            {{ currentLanguageSet?.action }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <ng-container *ngIf="!templateView">
+              <button
+                mat-mini-fab
+                id="removeParam"
+                (click)="removeSMSParameterTemplate(element, element.sNo)"
+                color="warn"
+              >
+                <span class="material-icons">close</span>
+              </button>
+            </ng-container>
+          </td>
+        </ng-container>
+        <!-- Header and Row Definitions -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
     </div>
 
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-40 m-b-40">
-      <button *ngIf='!templateView' mat-raised-button color="primary" type="button" class="pull-left m-r-10" (click)="goToViewList()">{{currentLanguageSet?.back}}</button>
-      <button *ngIf='templateReadOnly && !templateView' mat-raised-button color="primary" type="button" class="pull-left m-r-20 m-l-20" (click)="cancelTemplate()">{{currentLanguageSet?.cancel}}</button>
-      <button *ngIf='mappedSMSParameter?.length == parameterCount' mat-raised-button color="primary" type="button" class="pull-right" (click)="saveSMStemplate()">{{currentLanguageSet?.submit}}</button>
-      <button *ngIf='!templateReadOnly && !templateView' mat-raised-button color="primary" type="button" class="pull-right" (click)="extractParameters()">{{currentLanguageSet?.continue}}</button>
+      <button
+        *ngIf="!templateView"
+        mat-raised-button
+        color="primary"
+        type="button"
+        class="pull-left m-r-10"
+        (click)="goToViewList()"
+      >
+        {{ currentLanguageSet?.back }}
+      </button>
+      <button
+        *ngIf="templateReadOnly && !templateView"
+        mat-raised-button
+        color="primary"
+        type="button"
+        class="pull-left m-r-20 m-l-20"
+        (click)="cancelTemplate()"
+      >
+        {{ currentLanguageSet?.cancel }}
+      </button>
+      <button
+        *ngIf="mappedSMSParameter?.length === parameterCount"
+        mat-raised-button
+        color="primary"
+        type="button"
+        class="pull-right"
+        (click)="saveSMStemplate()"
+      >
+        {{ currentLanguageSet?.submit }}
+      </button>
+      <button
+        *ngIf="!templateReadOnly && !templateView"
+        mat-raised-button
+        color="primary"
+        type="button"
+        class="pull-right"
+        (click)="extractParameters()"
+      >
+        {{ currentLanguageSet?.continue }}
+      </button>
     </div>
-
-
   </div>
 </div>

@@ -6,25 +6,24 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'redirin',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
-    path:'redirin',
-    component: RedirOpenComponent
+    path: 'redirin',
+    component: RedirOpenComponent,
   },
   {
     path: 'telemedicine',
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./app-modules/scheduler/scheduler.module').then(
-        (x) => x.SchedulerModule
-        
+        (x) => x.SchedulerModule,
       ),
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true })],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

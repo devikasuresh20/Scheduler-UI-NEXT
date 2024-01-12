@@ -1,33 +1,66 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-xs-12">
-      <button class="pull-right" type="button" mat-icon-button (click)="drawer.toggle()">
+      <button
+        class="pull-right"
+        type="button"
+        mat-icon-button
+        (click)="drawer.toggle()"
+      >
         <mat-icon>compare_arrows</mat-icon>
       </button>
     </div>
   </div>
 
   <mat-drawer-container class="example-container" autosize>
-    <mat-drawer #drawer class="example-sidenav" mode="side" position="end" opened="true">
+    <mat-drawer
+      #drawer
+      class="example-sidenav"
+      mode="side"
+      position="end"
+      opened="true"
+    >
       <div class="container-fluid">
         <div class="row m-t-10">
           <div class="col-xs-12 box">
-            <mat-select class="input-full-width" placeholder="{{currentLanguageSet?.specialization}}" [(ngModel)]="selectedSpecialization">
-              <mat-option *ngFor="let specialization of specializationMaster" [value]="specialization.specializationID">
-                {{specialization.specialization}}
+            <mat-select
+              class="input-full-width"
+              placeholder="{{ currentLanguageSet?.specialization }}"
+              [(ngModel)]="selectedSpecialization"
+            >
+              <mat-option
+                *ngFor="let specialization of specializationMaster"
+                [value]="specialization.specializationID"
+              >
+                {{ specialization.specialization }}
               </mat-option>
             </mat-select>
           </div>
           <div class="col-xs-12 box">
             <mat-form-field class="input-full-width">
-              <input matInput [matDatepicker]="datepicker" placeholder="Choose a date" name="viewDate" [(ngModel)]="viewDate">
-              <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+              <input
+                matInput
+                [matDatepicker]="datepicker"
+                placeholder="Choose a date"
+                name="viewDate"
+                [(ngModel)]="viewDate"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="datepicker"
+              ></mat-datepicker-toggle>
               <mat-datepicker #datepicker></mat-datepicker>
             </mat-form-field>
           </div>
           <div class="col-xs-12 box m-t-20">
-            <button class="input-full-width" mat-raised-button color="primary" [disabled]="!(selectedSpecialization && viewDate)" (click)="getTimesheetBySpecialization()">
-              {{currentLanguageSet?.submit}}
+            <button
+              class="input-full-width"
+              mat-raised-button
+              color="primary"
+              [disabled]="!(selectedSpecialization && viewDate)"
+              (click)="getTimesheetBySpecialization()"
+            >
+              {{ currentLanguageSet?.submit }}
             </button>
           </div>
         </div>
@@ -39,10 +72,11 @@
         <div class="scrolling outer">
           <div class="inner">
             <table class="table" *ngIf="eventWithResource.length > 0">
-              <caption></caption> <!-- Table discription SonarQube bug fix -->
+              <caption></caption>
+              <!-- Table discription SonarQube bug fix -->
               <thead>
                 <tr>
-                  <th id="specialist">{{currentLanguageSet?.specialist}}</th>
+                  <th id="specialist">{{ currentLanguageSet?.specialist }}</th>
                   <td>
                     <div class="slot-container">
                       <div class="slot" *ngFor="let slot of daySlots">
@@ -54,12 +88,41 @@
               </thead>
               <tbody>
                 <tr *ngFor="let resource of eventWithResource">
-                  <th id="titlecase">{{ ((resource?.firstName || " ") + ' ' + (resource?.lastName || "")) | titlecase }} &nbsp;</th>
+                  <th id="titlecase">
+                    {{
+                      (resource?.firstName || " ") +
+                        " " +
+                        (resource?.lastName || "") | titlecase
+                    }}
+                    &nbsp;
+                  </th>
                   <td>
                     <div class="slot-container">
-                      <div class="slot" *ngFor="let slot of daySlots;let index=index">
-                        <ng-container *ngFor="let event of resource?.specialistAvailability?.slots">
-                          <div class="event" *ngIf="index == event.index" [ngStyle]="{'left.px': 2 * event.left, 'width.px': 2 * event.width, 'background': event.slot.charAt(0) == 'U'? 'gray': event.slot.charAt(0) == 'A' ? 'blue': 'red' }">{{ event.slot.charAt(0) }}</div>
+                      <div
+                        class="slot"
+                        *ngFor="let slot of daySlots; let index = index"
+                      >
+                        <ng-container
+                          *ngFor="
+                            let event of resource?.specialistAvailability?.slots
+                          "
+                        >
+                          <div
+                            class="event"
+                            *ngIf="index === event.index"
+                            [ngStyle]="{
+                              'left.px': 2 * event.left,
+                              'width.px': 2 * event.width,
+                              background:
+                                event.slot.charAt(0) === 'U'
+                                  ? 'gray'
+                                  : event.slot.charAt(0) === 'A'
+                                    ? 'blue'
+                                    : 'red'
+                            }"
+                          >
+                            {{ event.slot.charAt(0) }}
+                          </div>
                         </ng-container>
                       </div>
                     </div>

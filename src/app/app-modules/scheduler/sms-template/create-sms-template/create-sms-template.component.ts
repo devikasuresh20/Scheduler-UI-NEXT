@@ -1,25 +1,25 @@
 /*
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
-*
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
-*
-* This file is part of AMRIT.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see https://www.gnu.org/licenses/.
-*/
-import { Component, OnInit, Input } from '@angular/core';
+ * AMRIT – Accessible Medical Records via Integrated Technology
+ * Integrated EHR (Electronic Health Records) Solution
+ *
+ * Copyright (C) "Piramal Swasthya Management and Research Institute"
+ *
+ * This file is part of AMRIT.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
+ */
+import { Component, OnInit, Input, DoCheck } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
 import { SchedulerService } from '../../shared/services';
@@ -31,26 +31,37 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 @Component({
   selector: 'app-create-sms-template',
   templateUrl: './create-sms-template.component.html',
-  styleUrls: ['./create-sms-template.component.css']
+  styleUrls: ['./create-sms-template.component.css'],
 })
-export class CreateSmsTemplateComponent implements OnInit {
-  @Input('fullSMSTemplate')
+export class CreateSmsTemplateComponent implements OnInit, DoCheck {
+  @Input()
   fullSMSTemplate: any;
   languageComponent!: SetLanguageComponent;
   currentLanguageSet: any;
-  displayedColumns: string[] = ['sNo', 'parameter', 'valueType', 'value', 'action'];
-  
-  constructor(private fb: FormBuilder,
+  displayedColumns: string[] = [
+    'sNo',
+    'parameter',
+    'valueType',
+    'value',
+    'action',
+  ];
+
+  constructor(
+    private fb: FormBuilder,
     private schedulerService: SchedulerService,
     public httpServiceService: HttpServiceService,
     private confirmationService: ConfirmationService,
     private location: Location,
-    private activatedRoute: ActivatedRoute) { }
-  smsTemplateCreationForm!: FormGroup
+    private activatedRoute: ActivatedRoute,
+  ) {}
+  ngDoCheck(): void {
+    throw new Error('Method not implemented.');
+  }
+  smsTemplateCreationForm!: FormGroup;
 
-  masterSMSType:any[] = [];
-  parameters :any[] = [];
-  templateView: boolean = false;
+  masterSMSType: any[] = [];
+  parameters: any[] = [];
+  templateView = false;
   ngOnInit() {
     this.smsTemplateCreationForm = this.createsmsTemplateCreationForm();
     this.getSMSType();
@@ -58,43 +69,49 @@ export class CreateSmsTemplateComponent implements OnInit {
   }
   heading: any;
   getSMSType(view?: string) {
-    this.schedulerService.getSMSType().subscribe({next:(res:any) => {
-      console.log('res', res);
-      if (res && res.statusCode == 200) {
-        this.masterSMSType = res.data;
-        if (this.fullSMSTemplate) {
-          this.createViewSMSTemplate()
+    this.schedulerService.getSMSType().subscribe({
+      next: (res: any) => {
+        console.log('res', res);
+        if (res && res.statusCode == 200) {
+          this.masterSMSType = res.data;
+          if (this.fullSMSTemplate) {
+            this.createViewSMSTemplate();
+          } else {
+            this.heading = this.currentLanguageSet.createSMSTemplate;
+          }
         } else {
-          this.heading = this.currentLanguageSet.createSMSTemplate
+          this.confirmationService.alert(res.errorMessage, 'error');
         }
-      } else {
-        this.confirmationService.alert(res.errorMessage, 'error')
-      }
-    }, 
-    error: (err: any) => {
-      this.confirmationService.alert(err, 'error');
-  }});
+      },
+      error: (err: any) => {
+        this.confirmationService.alert(err, 'error');
+      },
+    });
   }
 
   createViewSMSTemplate() {
-    this.mappedSMSParameter = this.fullSMSTemplate.smsParameterMaps
+    this.mappedSMSParameter = this.fullSMSTemplate.smsParameterMaps;
     this.fullSMSTemplate.smsType = this.masterSMSType.filter((smsType: any) => {
-      if (smsType && smsType.smsTypeID && this.fullSMSTemplate.smsType && this.fullSMSTemplate.smsType.smsTypeID){
-        return smsType.smsTypeID == this.fullSMSTemplate.smsType.smsTypeID
-      }
-      else{
+      if (
+        smsType &&
+        smsType.smsTypeID &&
+        this.fullSMSTemplate.smsType &&
+        this.fullSMSTemplate.smsType.smsTypeID
+      ) {
+        return smsType.smsTypeID == this.fullSMSTemplate.smsType.smsTypeID;
+      } else {
         return false;
       }
-    })
+    });
     this.smsTemplateCreationForm.patchValue(this.fullSMSTemplate);
     this.templateReadOnly = true;
     this.templateView = true;
-    this.heading = this.currentLanguageSet.viewSMSTemplate
+    this.heading = this.currentLanguageSet.viewSMSTemplate;
   }
   get smsTemplate() {
-    return this.smsTemplateCreationForm.controls['smsTemplate'].value
+    return this.smsTemplateCreationForm.controls['smsTemplate'].value;
   }
-  smsTypeID: any
+  smsTypeID: any;
   checkSMSType() {
     this.smsTypeID = this.smsType.smsTypeID;
   }
@@ -105,22 +122,22 @@ export class CreateSmsTemplateComponent implements OnInit {
       smsTemplate: null,
       parameter: null,
       smsParameterType: null,
-      smsParameterValue: null
-    })
+      smsParameterValue: null,
+    });
   }
 
   parameterCount: any;
-  templateReadOnly: boolean = false;
+  templateReadOnly = false;
   extractParameters() {
     if (this.smsTypeID && this.smsTemplateName && this.smsTemplate) {
       this.parameters = [];
-      let tempParameters = [];
+      const tempParameters = [];
       let string_contents = [];
-      let regex = /[!?.,\n]/g;
+      const regex = /[!?.,\n]/g;
       string_contents = this.smsTemplate.replace(regex, ' ').split(' ');
       for (const element of string_contents) {
         if (element.startsWith('$$') && element.endsWith('$$')) {
-          let item = element.substr(2).slice(0, -2);
+          const item = element.substr(2).slice(0, -2);
           console.log(item);
           tempParameters.push(item);
         }
@@ -134,38 +151,43 @@ export class CreateSmsTemplateComponent implements OnInit {
         this.parametersLength = this.parameters.length;
         this.templateReadOnly = true;
       } else {
-        this.confirmationService.alert(this.currentLanguageSet.noparametersidentifiedinsmstemplate, 'info');
+        this.confirmationService.alert(
+          this.currentLanguageSet.noparametersidentifiedinsmstemplate,
+          'info',
+        );
       }
       console.log('param', this.parameters, this.parameterCount);
     } else {
-      this.confirmationService.alert(this.currentLanguageSet.provideallmandatoryfields)
+      this.confirmationService.alert(
+        this.currentLanguageSet.provideallmandatoryfields,
+      );
     }
-
-
   }
   get parameter() {
     return this.smsTemplateCreationForm.controls['parameter'].value;
   }
   masterSMSParameter: any[] = [];
   getSMSparameter() {
-    this.schedulerService.getSMSParameter().subscribe({next:(res: any) => {
-      console.log('res', res);
-      if (res && res.statusCode == 200) {
-        this.masterSMSParameter = res.data;
-      } else {
-        this.confirmationService.alert(res.errorMessage, 'error')
-      }
-    }, 
-    error:(err: any) => {
-      this.confirmationService.alert(err, 'error');
-  }});
+    this.schedulerService.getSMSParameter().subscribe({
+      next: (res: any) => {
+        console.log('res', res);
+        if (res && res.statusCode == 200) {
+          this.masterSMSParameter = res.data;
+        } else {
+          this.confirmationService.alert(res.errorMessage, 'error');
+        }
+      },
+      error: (err: any) => {
+        this.confirmationService.alert(err, 'error');
+      },
+    });
   }
   get smsParameterType() {
-    return this.smsTemplateCreationForm.controls['smsParameterType'].value
+    return this.smsTemplateCreationForm.controls['smsParameterType'].value;
   }
-  selectedParameterValues!: any
+  selectedParameterValues!: any;
   getParameterValue() {
-    this.selectedParameterValues = this.smsParameterType.smsParameters
+    this.selectedParameterValues = this.smsParameterType.smsParameters;
   }
   get smsParameterValue() {
     return this.smsTemplateCreationForm.controls['smsParameterValue'].value;
@@ -173,20 +195,25 @@ export class CreateSmsTemplateComponent implements OnInit {
   mappedSMSParameter: any[] = [];
   parametersLength: any;
   addSMSParameterTemplate() {
-    let reqObj  = {
-      'createdBy': localStorage.getItem('tm-userName'),
-      'modifiedBy': localStorage.getItem('tm-userName'),
-      'smsParameterName': this.parameter,
-      'smsParameterType': this.smsParameterType.smsParameterType,
-      'smsParameterID': this.smsParameterValue.smsParameterID,
-      'smsParameterValue': this.smsParameterValue.smsParameterName
-    }
-    if (reqObj.smsParameterName != undefined &&
+    const reqObj = {
+      createdBy: localStorage.getItem('tm-userName'),
+      modifiedBy: localStorage.getItem('tm-userName'),
+      smsParameterName: this.parameter,
+      smsParameterType: this.smsParameterType.smsParameterType,
+      smsParameterID: this.smsParameterValue.smsParameterID,
+      smsParameterValue: this.smsParameterValue.smsParameterName,
+    };
+    if (
+      reqObj.smsParameterName != undefined &&
       reqObj.smsParameterType != undefined &&
-      reqObj.smsParameterID != undefined) {
+      reqObj.smsParameterID != undefined
+    ) {
       this.mappedSMSParameter.push(reqObj);
     } else {
-      this.confirmationService.alert(this.currentLanguageSet.ValueTypeAndValueShouldBeSelected, 'info');
+      this.confirmationService.alert(
+        this.currentLanguageSet.ValueTypeAndValueShouldBeSelected,
+        'info',
+      );
     }
 
     this.parameters.splice(this.parameters.indexOf(this.parameter), 1);
@@ -194,53 +221,59 @@ export class CreateSmsTemplateComponent implements OnInit {
     this.smsTemplateCreationForm.patchValue({
       parameter: null,
       smsParameterType: null,
-      smsParameterValue: null
+      smsParameterValue: null,
     });
     this.masterSMSParameter = [];
     this.selectedParameterValues = [];
   }
   removeSMSParameterTemplate(parameter: any, sNo: any) {
-    
-    let indexToRemove = this.mappedSMSParameter.findIndex(item => item.sNo === sNo);
-  
+    const indexToRemove = this.mappedSMSParameter.findIndex(
+      (item) => item.sNo === sNo,
+    );
     if (indexToRemove !== -1) {
       this.mappedSMSParameter.splice(indexToRemove, 1);
       this.parameters.push(parameter.smsParameterName);
       this.parametersLength = this.parameters.length;
     }
   }
- 
+
   saveSMStemplate() {
-    let requestObject = {
-      'createdBy': localStorage.getItem('tm-userName'),
-      'providerServiceMapID': localStorage.getItem('tm-providerServiceMapID'),
-      'smsParameterMaps': this.mappedSMSParameter,
-      'smsTemplate': this.smsTemplate,
-      'smsTemplateName': this.smsTemplateName,
-      'smsTypeID': this.smsTypeID
-    }
-    this.schedulerService.saveSMSTemplate(requestObject).subscribe({next:(res: any) => {
-      console.log('res', res);
-      if (res && res.statusCode == 200) {
-        this.confirmationService.alertConfirm(this.currentLanguageSet.templateCreationSuccess, 'success')
-          .subscribe(() => {
-            this.location.back();
-          });
-      } else {
-        this.confirmationService.alert(res.errorMessage, 'error')
-      }
-    }, 
-    error:(err: any) => {
-      this.confirmationService.alert(err, 'error');
-  }});
+    const requestObject = {
+      createdBy: localStorage.getItem('tm-userName'),
+      providerServiceMapID: localStorage.getItem('tm-providerServiceMapID'),
+      smsParameterMaps: this.mappedSMSParameter,
+      smsTemplate: this.smsTemplate,
+      smsTemplateName: this.smsTemplateName,
+      smsTypeID: this.smsTypeID,
+    };
+    this.schedulerService.saveSMSTemplate(requestObject).subscribe({
+      next: (res: any) => {
+        console.log('res', res);
+        if (res && res.statusCode == 200) {
+          this.confirmationService
+            .alertConfirm(
+              this.currentLanguageSet.templateCreationSuccess,
+              'success',
+            )
+            .subscribe(() => {
+              this.location.back();
+            });
+        } else {
+          this.confirmationService.alert(res.errorMessage, 'error');
+        }
+      },
+      error: (err: any) => {
+        this.confirmationService.alert(err, 'error');
+      },
+    });
   }
 
   get smsTemplateName() {
-    return this.smsTemplateCreationForm.controls['smsTemplateName'].value
+    return this.smsTemplateCreationForm.controls['smsTemplateName'].value;
   }
 
   get smsType() {
-    return this.smsTemplateCreationForm.controls['smsType'].value
+    return this.smsTemplateCreationForm.controls['smsType'].value;
   }
   goToViewList() {
     this.location.back();
@@ -253,7 +286,7 @@ export class CreateSmsTemplateComponent implements OnInit {
     this.smsTemplateCreationForm.patchValue({
       parameter: null,
       smsParameterType: null,
-      smsParameterValue: null
+      smsParameterValue: null,
     });
     this.masterSMSParameter = [];
     this.selectedParameterValues = [];
@@ -261,19 +294,24 @@ export class CreateSmsTemplateComponent implements OnInit {
   }
 
   //AN40085822 27/9/2021 Integrating Multilingual Functionality --Start--
-  ngDoCheck(){
+  DoCheck() {
     this.fetchLanguageResponse();
-    if(this.currentLanguageSet !==undefined && this.currentLanguageSet !==null && this.fullSMSTemplate !==undefined && this.fullSMSTemplate !==null){
-     // this.createViewSMSTemplate()
-        } else {
-          this.heading = this.currentLanguageSet.createSMSTemplate
+    if (
+      this.currentLanguageSet !== undefined &&
+      this.currentLanguageSet !== null &&
+      this.fullSMSTemplate !== undefined &&
+      this.fullSMSTemplate !== null
+    ) {
+      // this.createViewSMSTemplate()
+    } else {
+      this.heading = this.currentLanguageSet.createSMSTemplate;
     }
   }
 
   fetchLanguageResponse() {
     this.languageComponent = new SetLanguageComponent(this.httpServiceService);
     this.languageComponent.setLanguage();
-    this.currentLanguageSet = this.languageComponent.currentLanguageObject; 
+    this.currentLanguageSet = this.languageComponent.currentLanguageObject;
   }
   //--End--
 }

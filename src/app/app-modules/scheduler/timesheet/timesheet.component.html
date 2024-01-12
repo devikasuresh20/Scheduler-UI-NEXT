@@ -2,26 +2,53 @@
   <div class="row m-t-10 m-b-40">
     <div class="col-xs-12 col-sm-7 calender">
       <mat-card>
-        <full-calendar *ngIf="calendarOptions" [options]="calendarOptions" (dateClick)="clickButton($event)"></full-calendar>
+        <full-calendar
+          *ngIf="calendarOptions"
+          [options]="calendarOptions"
+          (dateClick)="clickButton($event)"
+        ></full-calendar>
       </mat-card>
     </div>
 
-    <div class="col-xs-12 col-sm-5 availability-form" *ngIf="designation == 'Supervisor'">
+    <div
+      class="col-xs-12 col-sm-5 availability-form"
+      *ngIf="designation === 'Supervisor'"
+    >
       <mat-card>
         <div class="row">
           <div class="col-xs-12 box">
-            <mat-select class="input-full-width" placeholder=
-            "{{currentLanguageSet?.specialization}}" [(ngModel)]="selectedSpecialization"
-              (change)="getSpecialist()">
-              <mat-option *ngFor="let specialization of specializationMaster" [value]="specialization">
-                {{specialization.specialization}}
+            <mat-select
+              class="input-full-width"
+              placeholder="{{ currentLanguageSet?.specialization }}"
+              [(ngModel)]="selectedSpecialization"
+              (change)="getSpecialist()"
+            >
+              <mat-option
+                *ngFor="let specialization of specializationMaster"
+                [value]="specialization"
+              >
+                {{ specialization.specialization }}
               </mat-option>
             </mat-select>
           </div>
           <div class="col-xs-12 box">
-            <mat-select class="input-full-width" placeholder="{{currentLanguageSet?.specialist}}" [(ngModel)]="selectedSpecialist" (change)="getMonthEvents()">
-              <mat-option *ngFor="let specialist of specialistList" [value]="specialist">
-                {{ specialist.firstName + ' ' + (specialist.middleName || '') + ' ' + specialist.lastName }}
+            <mat-select
+              class="input-full-width"
+              placeholder="{{ currentLanguageSet?.specialist }}"
+              [(ngModel)]="selectedSpecialist"
+              (change)="getMonthEvents()"
+            >
+              <mat-option
+                *ngFor="let specialist of specialistList"
+                [value]="specialist"
+              >
+                {{
+                  specialist.firstName +
+                    " " +
+                    (specialist.middleName || "") +
+                    " " +
+                    specialist.lastName
+                }}
               </mat-option>
             </mat-select>
           </div>
@@ -29,48 +56,131 @@
       </mat-card>
     </div>
 
-    <div *ngIf="selectedSpecialist" class="col-xs-12 col-sm-5 availability-form">
+    <div
+      *ngIf="selectedSpecialist"
+      class="col-xs-12 col-sm-5 availability-form"
+    >
       <mat-card>
         <form [formGroup]="availabiltyForm">
           <div class="row">
             <div class="col-xs-12 m-t-10">
-              <mat-radio-group class="radio-list" formControlName="isAvailability" name="isAvailability" (change)="resetFormValue()"
-                required>
-                <mat-radio-button color="primary" value="true">{{currentLanguageSet?.available}}</mat-radio-button>
-                <mat-radio-button color="primary" value="false">{{currentLanguageSet?.notAvailable}}</mat-radio-button>
+              <mat-radio-group
+                class="radio-list"
+                formControlName="isAvailability"
+                name="isAvailability"
+                (change)="resetFormValue()"
+                required
+              >
+                <mat-radio-button color="primary" value="true">{{
+                  currentLanguageSet?.available
+                }}</mat-radio-button>
+                <mat-radio-button color="primary" value="false">{{
+                  currentLanguageSet?.notAvailable
+                }}</mat-radio-button>
               </mat-radio-group>
             </div>
             <div class="col-xs-12 m-t-10 box">
-              <input matInput [matDatepicker]="configuredFromDatePicker" class="input-full-width"  placeholder='{{currentLanguageSet?.fromDate}}' name="configuredFromDate" formControlName="configuredFromDate" readonly
-              [min]="minSelectableDate" [max]="maxSelectableDate" required>
-              <mat-datepicker-toggle matSuffix [for]="configuredFromDatePicker"></mat-datepicker-toggle>
+              <input
+                matInput
+                [matDatepicker]="configuredFromDatePicker"
+                class="input-full-width"
+                placeholder="{{ currentLanguageSet?.fromDate }}"
+                name="configuredFromDate"
+                formControlName="configuredFromDate"
+                readonly
+                [min]="minSelectableDate"
+                [max]="maxSelectableDate"
+                required
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="configuredFromDatePicker"
+              ></mat-datepicker-toggle>
               <mat-datepicker #configuredFromDatePicker></mat-datepicker>
             </div>
-            <div class="col-xs-12 box" [hidden]="isAvailability == 'false'">
-              <input matInput [matDatepicker]="configuredToDatePicker" class="input-full-width"  placeholder='{{currentLanguageSet?.toDate}}' formControlName="configuredToDate" readonly
-              name="configuredToDate" [min]="configuredFromDate" [max]="maxSelectableDate" [required]='configuredToDateBoolean'>
-              <mat-datepicker-toggle matSuffix [for]="configuredToDatePicker"></mat-datepicker-toggle>
+            <div class="col-xs-12 box" [hidden]="isAvailability === 'false'">
+              <input
+                matInput
+                [matDatepicker]="configuredToDatePicker"
+                class="input-full-width"
+                placeholder="{{ currentLanguageSet?.toDate }}"
+                formControlName="configuredToDate"
+                readonly
+                name="configuredToDate"
+                [min]="configuredFromDate"
+                [max]="maxSelectableDate"
+                [required]="configuredToDateBoolean"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="configuredToDatePicker"
+              ></mat-datepicker-toggle>
               <mat-datepicker #configuredToDatePicker></mat-datepicker>
             </div>
             <div class="col-xs-12 box">
-                <input matInput [matDatepicker]="configuredFromTimePicker" class="input-full-width"  placeholder='{{currentLanguageSet?.fromTime}}' formControlName="configuredFromTime" name="configuredFromTime" required>
-              <mat-datepicker-toggle matSuffix [for]="configuredFromTimePicker"></mat-datepicker-toggle>
+              <input
+                matInput
+                [matDatepicker]="configuredFromTimePicker"
+                class="input-full-width"
+                placeholder="{{ currentLanguageSet?.fromTime }}"
+                formControlName="configuredFromTime"
+                name="configuredFromTime"
+                required
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="configuredFromTimePicker"
+              ></mat-datepicker-toggle>
               <mat-datepicker #configuredFromTimePicker></mat-datepicker>
             </div>
             <div class="col-xs-12 box">
-                <input matInput [matDatepicker]="configuredToTimePicker" class="input-full-width"  placeholder="{{currentLanguageSet?.toTime}}" formControlName="configuredToTime" name="configuredToTime" [min]="configuredFromDate?.getTime() == configuredToDate?.getTime() ? configuredFromTime : null" required>
-              <mat-datepicker-toggle matSuffix [for]="configuredToTimePicker"></mat-datepicker-toggle>
+              <input
+                matInput
+                [matDatepicker]="configuredToTimePicker"
+                class="input-full-width"
+                placeholder="{{ currentLanguageSet?.toTime }}"
+                formControlName="configuredToTime"
+                name="configuredToTime"
+                [min]="
+                  configuredFromDate?.getTime() === configuredToDate?.getTime()
+                    ? configuredFromTime
+                    : null
+                "
+                required
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="configuredToTimePicker"
+              ></mat-datepicker-toggle>
               <mat-datepicker #configuredToTimePicker></mat-datepicker>
             </div>
-            <div class="col-xs-12 day-list" *ngIf="isAvailability != 'false'">
-              <button type="button" mat-mini-fab [color]="day.isSelected ? 'warn':'primary'" (click)="day.isSelected = !(day.isSelected);"
-                *ngFor="let day of dayList; let i= index">{{ day.name }}</button>
+            <div class="col-xs-12 day-list" *ngIf="isAvailability !== 'false'">
+              <button
+                type="button"
+                mat-mini-fab
+                [color]="day.isSelected ? 'warn' : 'primary'"
+                (click)="day.isSelected = !day.isSelected"
+                *ngFor="let day of dayList; let i = index"
+              >
+                {{ day.name }}
+              </button>
             </div>
           </div>
           <div class="row m-t-30">
             <div class="col-xs-12">
-              <button type="button" mat-raised-button color="accent" class="input-full-width" [disabled]="availabiltyForm.pristine || (availabiltyForm.dirty && availabiltyForm.invalid)"
-                (click)="submitAvailabilityForm(availabiltyForm)">{{currentLanguageSet?.submit}}</button>
+              <button
+                type="button"
+                mat-raised-button
+                color="accent"
+                class="input-full-width"
+                [disabled]="
+                  availabiltyForm.pristine ||
+                  (availabiltyForm.dirty && availabiltyForm.invalid)
+                "
+                (click)="submitAvailabilityForm(availabiltyForm)"
+              >
+                {{ currentLanguageSet?.submit }}
+              </button>
             </div>
           </div>
         </form>

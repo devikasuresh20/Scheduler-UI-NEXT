@@ -1,34 +1,40 @@
 /*
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
-*
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
-*
-* This file is part of AMRIT.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see https://www.gnu.org/licenses/.
-*/
+ * AMRIT – Accessible Medical Records via Integrated Technology
+ * Integrated EHR (Electronic Health Records) Solution
+ *
+ * Copyright (C) "Piramal Swasthya Management and Research Institute"
+ *
+ * This file is part of AMRIT.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
+ */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { ConfirmationService } from './confirmation.service';
 import { SpinnerService } from './spinner.service';
-import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
 
 @Injectable()
 export class HttpInterceptor implements HttpInterceptor {
-
   timerRef: any;
   currentLanguageSet: any;
   constructor(
@@ -40,9 +46,9 @@ export class HttpInterceptor implements HttpInterceptor {
 
   intercept(
     req: HttpRequest<any>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    let key: any = sessionStorage.getItem('key');
+    const key: any = sessionStorage.getItem('key');
     let modifiedReq = null;
     if (key !== undefined && key !== null) {
       modifiedReq = req.clone({
@@ -55,8 +61,8 @@ export class HttpInterceptor implements HttpInterceptor {
     }
     return next.handle(modifiedReq).pipe(
       tap((event: HttpEvent<any>) => {
-        if(req.url !== undefined && !req.url.includes('cti/getAgentState') )
-        this.spinnerService.show();
+        if (req.url !== undefined && !req.url.includes('cti/getAgentState'))
+          this.spinnerService.show();
         if (event instanceof HttpResponse) {
           console.log(event.body);
           this.onSuccess(req.url, event.body);
@@ -68,7 +74,7 @@ export class HttpInterceptor implements HttpInterceptor {
         console.error(error);
         this.spinnerService.show();
         return throwError(error.error);
-      })
+      }),
     );
   }
 
@@ -86,5 +92,4 @@ export class HttpInterceptor implements HttpInterceptor {
     }
   }
   // -----End------
-  
 }

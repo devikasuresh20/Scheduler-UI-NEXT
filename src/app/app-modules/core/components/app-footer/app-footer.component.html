@@ -1,14 +1,17 @@
 <footer class="footer container-fluid">
-  <div class="row ">
+  <div class="row">
     <div class="col-xs-4 text-left">
-      <span class="footer-text">{{currentLanguageSet?.poweredByWipro}}</span>
+      <span class="footer-text">{{ currentLanguageSet?.poweredByWipro }}</span>
     </div>
     <div class="col-xs-4 text-center">
-      <p class="footer-text">{{year}} © {{currentLanguageSet?.pSMRI}}</p>
+      <p class="footer-text">{{ year }} © {{ currentLanguageSet?.pSMRI }}</p>
     </div>
     <div class="col-xs-4 text-right">
       <p class="footer-text">
-        <span [ngClass]="{online: status, offline: !status}"></span> {{ status ? currentLanguageSet?.online: currentLanguageSet?.offline}}&nbsp;
+        <span [ngClass]="{ online: status, offline: !status }"></span>
+        {{
+          status ? currentLanguageSet?.online : currentLanguageSet?.offline
+        }}&nbsp;
       </p>
     </div>
   </div>
