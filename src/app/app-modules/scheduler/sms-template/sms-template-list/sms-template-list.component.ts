@@ -33,6 +33,7 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 export class SmsTemplateListComponent implements OnInit, DoCheck {
   languageComponent!: SetLanguageComponent;
   currentLanguageSet: any;
+  templateList: any = [];
   displayedColumns: string[] = [
     'sNo',
     'templateName',
@@ -54,7 +55,7 @@ export class SmsTemplateListComponent implements OnInit, DoCheck {
     this.getAllSMSTemplates();
     this.fetchLanguageResponse();
   }
-  templateList = [];
+
   getAllSMSTemplates() {
     this.schedulerService.getAllSMSTemplates().subscribe({
       next: (res: any) => {

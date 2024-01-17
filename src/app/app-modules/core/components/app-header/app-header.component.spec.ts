@@ -41,17 +41,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MaterialModule } from '../../../core/material.module';
 
-class RouterStub {
-  // navigate(something) {}
-}
+class RouterStub {}
 class MockActivatedRoute {
   snapshot = {
     params: [null],
   };
 }
-class authServiceMock {
-  // logoutUser() {}
-}
+class authServiceMock {}
 
 describe('AppHeaderComponent', () => {
   let component: AppHeaderComponent;

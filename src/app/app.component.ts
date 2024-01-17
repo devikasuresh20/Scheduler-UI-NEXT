@@ -36,7 +36,6 @@ export class AppComponent implements OnInit {
       } else if (event instanceof NavigationError) {
         setTimeout(() => this.spinnerService.hide(), 500);
       } else if (event instanceof NavigationCancel) {
-        // Arrow Function Key Added
         setTimeout(() => this.spinnerService.hide(), 500);
       }
     });

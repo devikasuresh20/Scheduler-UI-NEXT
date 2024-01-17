@@ -45,6 +45,11 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
     'value',
     'action',
   ];
+  smsTemplateCreationForm!: FormGroup;
+  masterSMSType: any = [];
+  parameters: any = [];
+  templateView = false;
+  heading: any;
 
   constructor(
     private fb: FormBuilder,
@@ -57,17 +62,13 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
   ngDoCheck(): void {
     throw new Error('Method not implemented.');
   }
-  smsTemplateCreationForm!: FormGroup;
 
-  masterSMSType: any[] = [];
-  parameters: any[] = [];
-  templateView = false;
   ngOnInit() {
     this.smsTemplateCreationForm = this.createsmsTemplateCreationForm();
     this.getSMSType();
     this.fetchLanguageResponse();
   }
-  heading: any;
+
   getSMSType(view?: string) {
     this.schedulerService.getSMSType().subscribe({
       next: (res: any) => {
