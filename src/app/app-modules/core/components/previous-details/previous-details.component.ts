@@ -23,6 +23,7 @@ import { Component, OnInit, Inject, DoCheck } from '@angular/core';
 import { HttpServiceService } from '../../services/http-service.service';
 import { SetLanguageComponent } from '../set-language.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-previous-details',
@@ -30,8 +31,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./previous-details.component.css'],
 })
 export class PreviousDetailsComponent implements OnInit, DoCheck {
-  dataList = [];
-  filteredDataList = [];
+  dataList: any = [];
+  // filteredDataList = [];
+  filteredDataList = new MatTableDataSource<any>();
   columnList: any[] = [];
   currentLanguageSet: any;
   languageComponent!: SetLanguageComponent;
@@ -46,7 +48,7 @@ export class PreviousDetailsComponent implements OnInit, DoCheck {
     this.fetchLanguageResponse();
     if (this.input.dataList.data instanceof Array) {
       this.dataList = this.input.dataList.data;
-      this.filteredDataList = this.dataList.slice();
+      this.filteredDataList.data = this.dataList.slice();
     }
     if (this.input.dataList.columns instanceof Array)
       this.columnList = this.input.dataList.columns;
@@ -54,14 +56,15 @@ export class PreviousDetailsComponent implements OnInit, DoCheck {
 
   filterPreviousData(searchTerm: any) {
     console.log('searchTerm', searchTerm);
-    if (!searchTerm) this.filteredDataList = this.dataList;
-    else {
-      this.filteredDataList = [];
-      this.dataList.forEach((item) => {
+    if (!searchTerm) {
+      this.filteredDataList.data = this.dataList;
+    } else {
+      this.filteredDataList.data = [];
+      this.dataList.forEach((item: any) => {
         for (const key in item) {
           const value: string = '' + item[key];
           if (value.toLowerCase().indexOf(searchTerm.toLowerCase()) >= 0) {
-            this.filteredDataList.push(item);
+            this.filteredDataList.data.push(item);
             break;
           }
         }

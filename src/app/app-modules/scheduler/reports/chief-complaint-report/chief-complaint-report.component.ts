@@ -26,6 +26,7 @@ import { ConfirmationService } from '../../../core/services/confirmation.service
 import * as XLSX from 'xlsx';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-chief-complaint-report',
@@ -170,95 +171,28 @@ export class ChiefComplaintReportComponent implements OnInit, DoCheck {
 
   exportToxlsx(criteria: any) {
     if (this.chiefComplaintRawData.length > 0) {
-      const reports: any = [];
-      const reportHeadings: any = [];
-      const reportSheet: any = {};
-      const wb_name = 'Chief Complaint Report';
-      const criteria_worksheet: XLSX.WorkSheet =
-        XLSX.utils.json_to_sheet(criteria);
-      reportHeadings.push('Criteria');
-      reports.push(criteria_worksheet);
-      reportSheet['Criteria'] = criteria_worksheet;
-      this.chiefComplaintRawData.forEach((obj: any) => {
-        obj.chiefComplaintReport.forEach((checkForNull: any) => {
-          for (const key in checkForNull) {
-            if (checkForNull[key] == null) {
-              checkForNull[key] = '';
-            }
-          }
-        });
-      });
-
+      const wb_name = 'Chief_Complaint_Report';
+      const blobParts: any[] = [];
+      // Create Criteria worksheet
+      const criteriaExcel = this.convertToExcel(criteria, 'Criteria');
+      blobParts.push(criteriaExcel);
+      // Process Chief Complaint Raw Data
       for (const element of this.chiefComplaintRawData) {
         if (element.vanID) {
-          const headKey = this.chiefComplaintRawData[0].chiefComplaintReport[0];
-          const head = Object.keys(headKey);
-          console.log('headKey', headKey);
-
-          const report_worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
+          // Create Report worksheet
+          const reportExcel = this.convertToExcel(
             element.chiefComplaintReport,
-            { header: head },
+            element.vanName,
           );
-          // below code added to modify the headers
-
-          let i = 65; // starting from 65 since it is the ASCII code of 'A'.
-          let count = 0;
-          console.log('head', head);
-          while (i < head.length + 65) {
-            let j;
-            if (count > 0) {
-              j = i - 26 * count;
-            } else {
-              j = i;
-            }
-            const cellPosition = String.fromCharCode(j);
-            let finalCellName: any;
-            if (count == 0) {
-              finalCellName = cellPosition + '1';
-              console.log(finalCellName);
-            } else {
-              const newcellPosition = String.fromCharCode(64 + count);
-              finalCellName = newcellPosition + cellPosition + '1';
-              console.log(finalCellName);
-            }
-            const newName = this.modifyHeader(head, i);
-            delete report_worksheet[finalCellName].w;
-            report_worksheet[finalCellName].v = newName;
-            i++;
-            if (i == 91 + count * 26) {
-              count++;
-            }
-          }
-          // --------end--------
-          const heading = element.vanName;
-
-          reportHeadings.push(heading);
-          reports.push(report_worksheet);
-          reportSheet[heading] = report_worksheet;
+          blobParts.push(reportExcel);
         }
       }
-      const workbook: XLSX.WorkBook = {
-        Sheets: reportSheet,
-        SheetNames: reportHeadings,
-      };
-      const excelBuffer: any = XLSX.write(workbook, {
-        bookType: 'xlsx',
-        type: 'array',
-      });
-      const blob = new Blob([excelBuffer], {
+      // Combine all parts into a Blob
+      const blob = new Blob(blobParts, {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
-      if ((navigator as any).msSaveBlob) {
-        (navigator as any).msSaveBlob(blob, wb_name);
-      } else {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute('visibility', 'hidden');
-        link.download = wb_name.replace(/ /g, '_') + '.xlsx';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
+      // Save the Blob using FileSaver
+      FileSaver.saveAs(blob, `${wb_name}.xlsx`);
       this.confirmationService.alert(
         this.currentLanguageSet.chiefComplaintreportdownloaded,
         'success',
@@ -266,6 +200,24 @@ export class ChiefComplaintReportComponent implements OnInit, DoCheck {
     } else {
       this.confirmationService.alert(this.currentLanguageSet.norecordfound);
     }
+  }
+  convertToExcel(data: any[], sheetName: string): BlobPart {
+    const header = Object.keys(data[0]);
+    const excelContent =
+      header.join('\t') +
+      '\n' +
+      data
+        .map((row) => {
+          return header
+            .map((fieldName) => {
+              return row[fieldName];
+            })
+            .join('\t');
+        })
+        .join('\n');
+    return new Blob([excelContent], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
   }
   modifyHeader(headers: any, i: any) {
     let modifiedHeader: string;
