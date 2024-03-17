@@ -27,6 +27,7 @@ import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SetLanguageComponent } from '../../../core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-create-sms-template',
@@ -40,16 +41,27 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
   currentLanguageSet: any;
   displayedColumns: string[] = [
     'sNo',
-    'parameter',
-    'valueType',
-    'value',
+    'smsParameterName',
+    'smsParameterType',
+    'smsParameterValue',
     'action',
   ];
+
+  // displayedColumns: string[] = [
+  //   'sNo',
+  //   'smsParameterName',
+  //   'smsParameterType',
+  //   'smsParameterValue',
+  //   'action',
+  // ];
   smsTemplateCreationForm!: FormGroup;
   masterSMSType: any = [];
   parameters: any = [];
   templateView = false;
   heading: any;
+  // mappedSMSParameter: any[] = [];
+  mappedSMSParameter = new MatTableDataSource<any>();
+  parametersLength: any;
 
   constructor(
     private fb: FormBuilder,
@@ -91,7 +103,7 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
   }
 
   createViewSMSTemplate() {
-    this.mappedSMSParameter = this.fullSMSTemplate.smsParameterMaps;
+    this.mappedSMSParameter.data = this.fullSMSTemplate.smsParameterMaps;
     this.fullSMSTemplate.smsType = this.masterSMSType.filter((smsType: any) => {
       if (
         smsType &&
@@ -193,8 +205,7 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
   get smsParameterValue() {
     return this.smsTemplateCreationForm.controls['smsParameterValue'].value;
   }
-  mappedSMSParameter: any[] = [];
-  parametersLength: any;
+
   addSMSParameterTemplate() {
     const reqObj = {
       createdBy: localStorage.getItem('tm-userName'),
@@ -209,7 +220,7 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
       reqObj.smsParameterType != undefined &&
       reqObj.smsParameterID != undefined
     ) {
-      this.mappedSMSParameter.push(reqObj);
+      this.mappedSMSParameter.data.push(reqObj);
     } else {
       this.confirmationService.alert(
         this.currentLanguageSet.ValueTypeAndValueShouldBeSelected,
@@ -228,11 +239,11 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
     this.selectedParameterValues = [];
   }
   removeSMSParameterTemplate(parameter: any, sNo: any) {
-    const indexToRemove = this.mappedSMSParameter.findIndex(
-      (item) => item.sNo === sNo,
+    const indexToRemove = this.mappedSMSParameter.data.findIndex(
+      (item: any) => item.sNo === sNo,
     );
     if (indexToRemove !== -1) {
-      this.mappedSMSParameter.splice(indexToRemove, 1);
+      this.mappedSMSParameter.data.splice(indexToRemove, 1);
       this.parameters.push(parameter.smsParameterName);
       this.parametersLength = this.parameters.length;
     }
@@ -291,7 +302,7 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
     });
     this.masterSMSParameter = [];
     this.selectedParameterValues = [];
-    this.mappedSMSParameter = [];
+    this.mappedSMSParameter.data = [];
   }
 
   //AN40085822 27/9/2021 Integrating Multilingual Functionality --Start--

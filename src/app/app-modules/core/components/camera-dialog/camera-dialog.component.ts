@@ -26,18 +26,19 @@ import {
   EventEmitter,
   ElementRef,
   ViewChild,
-  AfterViewInit,
   DoCheck,
 } from '@angular/core';
-import { ConfirmationService } from '../../services/confirmation.service';
-import { SetLanguageComponent } from '../set-language.component';
-import { HttpServiceService } from '../../services/http-service.service';
 import { MatDialogRef } from '@angular/material/dialog';
-import html2canvas from 'html2canvas';
-import { Subject } from 'rxjs';
-import { WebcamImage, WebcamInitError } from 'ngx-webcam';
-import { saveAs } from 'file-saver';
+import { HttpServiceService } from '../../services/http-service.service';
+import { ConfirmationService } from '../../services';
+import { SetLanguageComponent } from '../set-language.component';
+import { Subject } from 'rxjs/internal/Subject';
 import { ChartData, ChartType } from 'chart.js';
+import html2canvas from 'html2canvas';
+import { WebcamImage, WebcamInitError } from 'ngx-webcam';
+import { Observable } from 'rxjs';
+import * as saveAs from 'file-saver';
+
 interface Mark {
   xCord: any;
   yCord: any;
@@ -50,17 +51,19 @@ interface Mark {
   templateUrl: './camera-dialog.component.html',
   styleUrls: ['./camera-dialog.component.css'],
 })
-export class CameraDialogComponent implements OnInit, AfterViewInit, DoCheck {
+export class CameraDialogComponent implements OnInit, DoCheck {
   @Output() cancelEvent = new EventEmitter();
 
   @ViewChild('myCanvas')
-  myCanvas!: { nativeElement: any };
-  @ViewChild('myImg') myImg!: { nativeElement: any };
+  myCanvas!: ElementRef;
+  @ViewChild('myImg')
+  myImg!: ElementRef;
+
   status: any;
   public imageCode: any;
   public availablePoints: any;
   public annotate: any;
-  public title: any;
+  public title!: string;
   public capture = false;
   public captured: any = false;
   public webcam: any;
@@ -72,13 +75,13 @@ export class CameraDialogComponent implements OnInit, AfterViewInit, DoCheck {
   pointsToWrite: Array<any> = [];
   markers: Mark[] = [];
   ctx!: CanvasRenderingContext2D;
-  loaded!: boolean;
-  languageComponent!: SetLanguageComponent;
-  currentLanguageSet: any;
-  triggerObservable: Subject<void> = new Subject<void>();
-  webcamImage: WebcamImage | undefined;
-  webcamInitError: WebcamInitError | undefined;
+  loaded = false;
+  public currentLanguageSet: any;
+  private trigger: Subject<void> = new Subject<void>();
+  public webcamImage!: WebcamImage;
+  private nextWebcam: Subject<any> = new Subject();
   public barChartType: ChartType = 'bar';
+  sysImage = '';
   public barChartData: ChartData<any> = {
     datasets: [
       {
@@ -86,61 +89,70 @@ export class CameraDialogComponent implements OnInit, AfterViewInit, DoCheck {
       },
     ],
   };
+
   constructor(
     public dialogRef: MatDialogRef<CameraDialogComponent>,
-    private element: ElementRef,
     public httpServiceService: HttpServiceService,
     private confirmationService: ConfirmationService,
   ) {
     this.options = {
+      audio: false,
+      video: true,
       width: 500,
       height: 390,
-      video: true,
+      fallbackMode: 'callback',
+      fallbackSrc: 'jscam_canvas_only.swf',
+      fallbackQuality: 50,
       cameraType: 'back',
     };
   }
-  captureImage(webcamImage: WebcamImage): void {
-    // Handle the captured image data
-    this.webcamImage = webcamImage;
-    this.base64 = webcamImage.imageAsDataUrl;
-    this.captured = true;
-  }
-  handleKeyDownRecaptureImg(event: KeyboardEvent): void {
-    if (event.key == 'Enter' || event.key == 'Spacebar' || event.key == ' ') {
-      this.recaptureImage();
-    }
+
+  onSuccess(stream: any) {
+    console.log('capturing video stream');
   }
 
-  recaptureImage(): void {
-    // Trigger new image capture
-    this.captured = false;
-    this.triggerObservable.next();
-  }
-  captureImageButton() {
-    if (this.captured) {
-      this.status = 'Retry';
-    } else {
-      this.status = 'Capture';
-    }
+  onError(err: any) {
+    console.log(err);
   }
 
-  handleInitError(error: WebcamInitError): void {
-    // Handle webcam initialization error
-    this.webcamInitError = error;
-  }
   ngOnInit() {
+    this.assignSelectedLanguage();
     this.loaded = false;
-    this.status = 'Capture';
-    if (this.availablePoints && this.availablePoints.markers)
+    this.status = this.currentLanguageSet.capture;
+    if (this.availablePoints?.markers)
       this.pointsToWrite = this.availablePoints.markers;
-    this.fetchLanguageResponse();
+  }
+
+  public captureImg(webcamImage: WebcamImage): void {
+    if (webcamImage) {
+      this.webcamImage = webcamImage;
+      this.sysImage = webcamImage?.imageAsDataUrl;
+      this.captured = true;
+      this.status = this.currentLanguageSet.capture;
+      console.info('got webcam image', this.sysImage);
+    } else {
+      this.captured = false;
+      this.status = this.currentLanguageSet.capture;
+    }
+  }
+  public get nextWebcamObservable(): Observable<any> {
+    return this.nextWebcam.asObservable();
+  }
+
+  ngDoCheck() {
+    this.assignSelectedLanguage();
+  }
+  assignSelectedLanguage() {
+    const getLanguageJson = new SetLanguageComponent(this.httpServiceService);
+    getLanguageJson.setLanguage();
+    this.currentLanguageSet = getLanguageJson.currentLanguageObject;
   }
 
   Confirm() {
     this.cancelEvent.emit(null);
   }
 
-  ngAfterViewInit() {
+  AfterViewInit() {
     if (this.annotate) this.loadingCanvas();
 
     if (!this.loaded) {
@@ -154,6 +166,15 @@ export class CameraDialogComponent implements OnInit, AfterViewInit, DoCheck {
     this.pointsToWrite.forEach((num) => {
       this.pointMark(num);
     });
+  }
+
+  public getSnapshot(): void {
+    this.trigger.next();
+    console.info('image type with base64 ', this.webcamImage);
+  }
+
+  public get triggerObservable(): Observable<void> {
+    return this.trigger.asObservable();
   }
 
   loadingCanvas() {
@@ -174,6 +195,28 @@ export class CameraDialogComponent implements OnInit, AfterViewInit, DoCheck {
     this.ctx.font = 'bold 20px serif';
     this.score = 1;
   }
+
+  handleKeyDownRecaptureImg(event: KeyboardEvent): void {
+    if (
+      event.key === 'Enter' ||
+      event.key === 'Spacebar' ||
+      event.key === ' '
+    ) {
+      this.recaptureImage();
+    }
+  }
+
+  recaptureImage(): void {
+    // Trigger new image capture
+    this.captured = false;
+    this.trigger.next();
+  }
+
+  handleInitError(error: WebcamInitError): void {
+    // Handle webcam initialization error
+    // this.webcamInitError = error;
+  }
+
   score: any;
   pointMark(event: any) {
     if (event.xCord) event.offsetX = event.xCord;
@@ -184,7 +227,9 @@ export class CameraDialogComponent implements OnInit, AfterViewInit, DoCheck {
       this.saveDescription(event);
     } else {
       setTimeout(() => {
-        this.confirmationService.alert(this.currentLanguageSet.maxMarkers);
+        this.confirmationService.alert(
+          this.currentLanguageSet.alerts.info.sixMakers,
+        );
       }, 0);
     }
   }
@@ -226,38 +271,42 @@ export class CameraDialogComponent implements OnInit, AfterViewInit, DoCheck {
   }
 
   downloadGraph() {
-    const containerElement = document.getElementById('container-dialog');
-    if (containerElement) {
-      html2canvas(containerElement).then((canvas: any) => {
-        canvas.toBlob((blob: any) => {
-          try {
-            const graphName =
-              `${this.graph.type}_${localStorage.getItem(
-                'beneficiaryRegID',
-              )}_${localStorage.getItem('visitID')}` || 'graphTrends';
-            saveAs(blob, graphName);
-          } catch (e) {
-            const newWindow = window.open();
-            if (newWindow) {
-              newWindow.document.write(
-                '<img src="' + canvas.toDataURL() + '" />',
-              );
+    const container = document.getElementById('container-dialog');
+
+    if (container) {
+      html2canvas(container)
+        .then((canvas) => {
+          canvas.toBlob((blob) => {
+            if (blob) {
+              try {
+                const graphName =
+                  `${this.graph.type}_${localStorage.getItem(
+                    'beneficiaryRegID',
+                  )}_${localStorage.getItem('visitID')}` || 'graphTrends';
+                saveAs(blob, graphName);
+              } catch (e) {
+                console.error('Error saving image:', e);
+
+                // Perform a null check before calling window.open
+                const newWindow = window.open();
+                if (newWindow) {
+                  newWindow.document.write(
+                    '<img src="' + canvas.toDataURL() + '" />',
+                  );
+                } else {
+                  console.error('Error opening a new window.');
+                }
+              }
+            } else {
+              console.error('Blob is null.');
             }
-          }
+          });
+        })
+        .catch((error) => {
+          console.error('Error capturing HTML element:', error);
         });
-      });
+    } else {
+      console.error('Element with ID "container-dialog" not found.');
     }
   }
-
-  // AV40085804 27/09/2021 Integrating Multilingual Functionality -----Start-----
-  ngDoCheck() {
-    this.fetchLanguageResponse();
-  }
-
-  fetchLanguageResponse() {
-    this.languageComponent = new SetLanguageComponent(this.httpServiceService);
-    this.languageComponent.setLanguage();
-    this.currentLanguageSet = this.languageComponent.currentLanguageObject;
-  }
-  // -----End------
 }

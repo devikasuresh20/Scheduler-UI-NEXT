@@ -125,7 +125,7 @@
 
     <div
       class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-10 table-responsive"
-      *ngIf="mappedSMSParameter.length > 0"
+      *ngIf="mappedSMSParameter.data.length > 0"
     >
       <table
         mat-table
@@ -138,15 +138,15 @@
           <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>
             {{ currentLanguageSet?.sNo }}
           </th>
-          <td mat-cell *matCellDef="let element">
-            <strong>{{ element.sNo }}</strong>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <strong>{{ i + 1 }}</strong>
           </td>
         </ng-container>
         <ng-container matColumnDef="smsParameterName">
           <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>
             {{ currentLanguageSet?.parameter }}
           </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element; let i = index">
             {{ element.smsParameterName }}
           </td>
         </ng-container>
@@ -154,7 +154,7 @@
           <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>
             {{ currentLanguageSet?.valueType }}
           </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element; let i = index">
             {{ element.smsParameterType }}
           </td>
         </ng-container>
@@ -162,7 +162,7 @@
           <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>
             {{ currentLanguageSet?.value }}
           </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element; let i = index">
             {{ element.smsParameterValue }}
           </td>
         </ng-container>
@@ -170,7 +170,7 @@
           <th mat-header-cell style="border-bottom: none" *matHeaderCellDef>
             {{ currentLanguageSet?.action }}
           </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element; let i = index">
             <ng-container *ngIf="!templateView">
               <button
                 mat-mini-fab
@@ -210,7 +210,7 @@
         {{ currentLanguageSet?.cancel }}
       </button>
       <button
-        *ngIf="mappedSMSParameter?.length === parameterCount"
+        *ngIf="mappedSMSParameter?.data?.length === parameterCount"
         mat-raised-button
         color="primary"
         type="button"

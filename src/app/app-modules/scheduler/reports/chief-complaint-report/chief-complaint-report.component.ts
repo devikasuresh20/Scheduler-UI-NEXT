@@ -23,10 +23,16 @@ import { Component, DoCheck, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SchedulerService } from '../../shared/services/scheduler.service';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
-import * as XLSX from 'xlsx';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
-import * as FileSaver from 'file-saver';
+import * as ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
+
+declare global {
+  interface Navigator {
+    msSaveBlob?: (blob: any, defaultName?: string) => boolean;
+  }
+}
 
 @Component({
   selector: 'app-chief-complaint-report',
@@ -54,6 +60,7 @@ export class ChiefComplaintReportComponent implements OnInit, DoCheck {
   maxEndDate!: Date;
   chiefComplaintRawData: any[] = [];
   dateOffset: any;
+  criteriaHead: any;
 
   ngOnInit() {
     this.providerServiceMapID = localStorage.getItem('tm-providerServiceMapID');
@@ -170,31 +177,105 @@ export class ChiefComplaintReportComponent implements OnInit, DoCheck {
   }
 
   exportToxlsx(criteria: any) {
-    if (this.chiefComplaintRawData.length > 0) {
-      const wb_name = 'Chief_Complaint_Report';
-      const blobParts: any[] = [];
-      // Create Criteria worksheet
-      const criteriaExcel = this.convertToExcel(criteria, 'Criteria');
-      blobParts.push(criteriaExcel);
-      // Process Chief Complaint Raw Data
-      for (const element of this.chiefComplaintRawData) {
-        if (element.vanID) {
-          // Create Report worksheet
-          const reportExcel = this.convertToExcel(
-            element.chiefComplaintReport,
-            element.vanName,
-          );
-          blobParts.push(reportExcel);
+    if (criteria.length > 0) {
+      const criteriaArray = criteria.filter(function (obj: any) {
+        for (const key in obj) {
+          if (obj[key] === null) {
+            obj[key] = '';
+          }
         }
-      }
-      // Combine all parts into a Blob
-      const blob = new Blob(blobParts, {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        return obj;
       });
-      // Save the Blob using FileSaver
-      FileSaver.saveAs(blob, `${wb_name}.xlsx`);
+      if (criteriaArray.length !== 0) {
+        this.criteriaHead = Object.keys(criteriaArray[0]);
+        console.log('this.criteriaHead', this.criteriaHead);
+      }
+    }
+    if (this.chiefComplaintRawData.length > 0) {
+      const array = this.chiefComplaintRawData.filter(function (obj: any) {
+        for (const key in obj) {
+          if (obj[key] === null) {
+            obj[key] = '';
+          }
+        }
+        return obj;
+      });
+      if (array.length !== 0) {
+        const head = Object.keys(array[0]);
+        console.log('head', head);
+        const wb_name = 'Chief Complaint Report';
+        let i = 65; // starting from 65 since it is the ASCII code of 'A'.
+        let count = 0;
+        while (i < head.length + 65) {
+          let j;
+          if (count > 0) {
+            j = i - 26 * count;
+          } else {
+            j = i;
+          }
+          const cellPosition = String.fromCharCode(j);
+          let finalCellName: any;
+          if (count === 0) {
+            finalCellName = cellPosition + '1';
+            console.log(finalCellName);
+          } else {
+            const newcellPosition = String.fromCharCode(64 + count);
+            finalCellName = newcellPosition + cellPosition + '1';
+            console.log(finalCellName);
+          }
+          const newName = this.modifyHeader(head, i);
+          // delete report_worksheet[finalCellName].w; report_worksheet[finalCellName].v = newName;
+          i++;
+          if (i === 91 + count * 26) {
+            // i = 65;
+            count++;
+          }
+        }
+
+        const workbook = new ExcelJS.Workbook();
+        const criteria_worksheet = workbook.addWorksheet('Criteria');
+        const report_worksheet = workbook.addWorksheet('Report');
+
+        report_worksheet.addRow(head);
+        criteria_worksheet.addRow(this.criteriaHead);
+
+        // Add data
+        criteria.forEach((row: { [x: string]: any }) => {
+          const rowData: any[] = [];
+          this.criteriaHead.forEach((header: string | number) => {
+            rowData.push(row[header]);
+          });
+          criteria_worksheet.addRow(rowData);
+        });
+
+        this.chiefComplaintRawData.forEach((row: { [x: string]: any }) => {
+          const rowData: any[] = [];
+          head.forEach((header) => {
+            rowData.push(row[header]);
+          });
+          report_worksheet.addRow(rowData);
+        });
+
+        workbook.xlsx.writeBuffer().then((buffer) => {
+          const blob = new Blob([buffer], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          });
+          saveAs(blob, wb_name + '.xlsx');
+          if (navigator.msSaveBlob) {
+            navigator.msSaveBlob(blob, wb_name);
+          } else {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute('visibility', 'hidden');
+            link.download = wb_name.replace(/ /g, '_') + '.xlsx';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
+        });
+      }
       this.confirmationService.alert(
-        this.currentLanguageSet.chiefComplaintreportdownloaded,
+        this.currentLanguageSet.monthlyReportdownloaded,
         'success',
       );
     } else {

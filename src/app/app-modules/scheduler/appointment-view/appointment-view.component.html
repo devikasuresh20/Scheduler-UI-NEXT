@@ -52,115 +52,143 @@
         <div class="row">
           <div class="col-xs-12">
             <section class="table-responsive">
-              <table class="table table-striped">
-                <caption></caption>
-                <!-- Table discription SonarQube bug fix -->
-                <thead>
-                  <tr>
-                    <th id="sNo">{{ currentLanguageSet?.sNo }}</th>
-                    <th id="beneficiaryID">
-                      {{ currentLanguageSet?.beneficiaryID }}
-                    </th>
-                    <th id="beneficiaryName">
-                      {{ currentLanguageSet?.beneficiaryName }}
-                    </th>
-                    <th id="gender">{{ currentLanguageSet?.gender }}</th>
-                    <th id="age">{{ currentLanguageSet?.age }}</th>
-                    <th id="visitCategory">
-                      {{ currentLanguageSet?.visitCategoryVisitNo }}
-                    </th>
-                    <th id="visitDate">{{ currentLanguageSet?.visitDate }}</th>
-                    <th id="tCDate">{{ currentLanguageSet?.tCDate }}</th>
-                    <th id="image">{{ currentLanguageSet?.image }}</th>
-                    <th id="action" style="text-align: center">
-                      {{ currentLanguageSet?.action }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <ng-template
-                    [ngIf]="
-                      filteredBeneficiaryList &&
-                      filteredBeneficiaryList.length === 0
-                    "
+              <table
+                mat-table
+                [dataSource]="pagedList"
+                class="mat-elevation-z8"
+              >
+                <!-- SNo Column -->
+                <ng-container matColumnDef="sNo">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ currentLanguageSet?.sNo }}
+                  </th>
+                  <td mat-cell *matCellDef="let beneficiary; let i = index">
+                    {{ i + 1 }}
+                  </td>
+                </ng-container>
+
+                <!-- Beneficiary ID Column -->
+                <ng-container matColumnDef="beneficiaryID">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ currentLanguageSet?.beneficiaryID }}
+                  </th>
+                  <td mat-cell *matCellDef="let beneficiary">
+                    {{ beneficiary?.beneficiaryID }}
+                  </td>
+                </ng-container>
+
+                <!-- Beneficiary Name Column -->
+                <ng-container matColumnDef="beneficiaryName">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ currentLanguageSet?.beneficiaryName }}
+                  </th>
+                  <td mat-cell *matCellDef="let beneficiary">
+                    {{ beneficiary?.benName | titlecase }}
+                  </td>
+                </ng-container>
+                <!-- Gender Column -->
+                <ng-container matColumnDef="gender">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ currentLanguageSet?.gender }}
+                  </th>
+                  <td mat-cell *matCellDef="let beneficiary">
+                    {{ beneficiary.genderName | titlecase }}
+                  </td>
+                </ng-container>
+
+                <!-- Age Column -->
+                <ng-container matColumnDef="age">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ currentLanguageSet?.age }}
+                  </th>
+                  <td mat-cell *matCellDef="let beneficiary">
+                    {{ beneficiary.age }}
+                  </td>
+                </ng-container>
+
+                <!-- Visit Category Column -->
+                <ng-container matColumnDef="visitCategory">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ currentLanguageSet?.visitCategoryVisitNo }}
+                  </th>
+                  <td mat-cell *matCellDef="let beneficiary">
+                    {{ beneficiary.VisitCategory }} /
+                    {{ beneficiary.benVisitNo }}
+                  </td>
+                </ng-container>
+
+                <!-- Visit Date Column -->
+                <ng-container matColumnDef="visitDate">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ currentLanguageSet?.visitDate }}
+                  </th>
+                  <td mat-cell *matCellDef="let beneficiary">
+                    {{ beneficiary.benVisitDate }}
+                  </td>
+                </ng-container>
+
+                <!-- TC Date Column -->
+                <ng-container matColumnDef="tCDate">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ currentLanguageSet?.tCDate }}
+                  </th>
+                  <td mat-cell *matCellDef="let beneficiary">
+                    {{ beneficiary.tCRequestDate }}
+                  </td>
+                </ng-container>
+
+                <!-- Image Column -->
+                <ng-container matColumnDef="image">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ currentLanguageSet?.image }}
+                  </th>
+                  <td
+                    mat-cell
+                    *matCellDef="let beneficiary"
+                    (click)="patientImageView(beneficiary.beneficiaryRegID)"
+                    matTooltip="{{ currentLanguageSet?.image }}"
                   >
-                    <tr *ngFor="let row of blankTable">
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                    </tr>
-                  </ng-template>
-                  <tr
-                    *ngFor="let beneficiary of pagedList; let m = index"
-                    class="table-hover"
-                  >
-                    <td>
-                      {{ filteredBeneficiaryList.indexOf(beneficiary) + 1 }}
-                    </td>
-                    <td>{{ beneficiary?.beneficiaryID }}</td>
-                    <td>{{ beneficiary?.benName | titlecase }}</td>
-                    <td>{{ beneficiary.genderName | titlecase }}</td>
-                    <td>{{ beneficiary.age }}</td>
-                    <td>
-                      <span style="color: #a6a6a6"
-                        >{{ beneficiary.VisitCategory }}
-                      </span>
-                      /
-                      <span style="color: #a6a6a6">{{
-                        beneficiary.benVisitNo
-                      }}</span>
-                    </td>
-                    <td>{{ beneficiary.benVisitDate }}</td>
-                    <td>{{ beneficiary.tCRequestDate }}</td>
-                    <td
-                      (click)="patientImageView(beneficiary.beneficiaryRegID)"
-                      matTooltip="{{ currentLanguageSet?.image }}"
+                    <img
+                      src="assets/images/Avatar-Profile_30X30.png"
+                      alt="Avatar Profile"
+                    />
+                  </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ currentLanguageSet?.action }}
+                  </th>
+                  <td mat-cell *matCellDef="let beneficiary">
+                    <button
+                      mat-raised-button
+                      (click)="cancelTCRequest(beneficiary)"
+                      matTooltip="{{ currentLanguageSet?.cancelTc }}"
+                      color="warn"
+                      [disabled]="beneficiary.specialist_flag !== 1"
                     >
-                      <img
-                        src="assets/images/Avatar-Profile_30X30.png"
-                        alt="Avatar Profile"
-                      />
-                    </td>
-                    <td>
-                      <button
-                        mat-raised-button
-                        (click)="cancelTCRequest(beneficiary)"
-                        matTooltip="{{ currentLanguageSet?.cancelTc }}"
-                        color="warn"
-                        [disabled]="beneficiary.specialist_flag !== 1"
-                      >
-                        {{ currentLanguageSet?.cancel }}
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-                <tfoot *ngIf="filteredBeneficiaryList.length > 0">
-                  <tr *ngIf="filteredBeneficiaryList.length > 0">
-                    <td colspan="5">
-                      <div class="totalCount">
-                        {{ currentLanguageSet?.totalCount }} :
-                        {{ filteredBeneficiaryList.length }}
-                      </div>
-                    </td>
-                    <td colspan="5">
-                      <mat-paginator
-                        [length]="filteredBeneficiaryList.length"
-                        [pageSize]="rowsPerPage"
-                        [pageSizeOptions]="[rowsPerPage]"
-                        (page)="pageChanged($event)"
-                      >
-                      </mat-paginator>
-                    </td>
-                  </tr>
-                </tfoot>
+                      {{ currentLanguageSet?.cancel }}
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></tr>
               </table>
+              <div class="totalCount" *ngIf="pagedList.data.length > 0">
+                {{ currentLanguageSet?.totalCount }} :
+                {{ pagedList.data.length }}
+              </div>
+              <mat-paginator
+                [hidden]="pagedList.data.length === 0"
+                [pageSizeOptions]="[5, 10, 25]"
+                [pageSize]="5"
+                showFirstLastButtons
+              ></mat-paginator>
             </section>
           </div>
         </div>

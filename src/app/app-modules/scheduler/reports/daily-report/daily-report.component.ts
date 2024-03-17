@@ -23,9 +23,16 @@ import { Component, DoCheck, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SchedulerService } from '../../shared/services/scheduler.service';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
-import * as XLSX from 'xlsx';
 import { SetLanguageComponent } from '../../../core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import * as ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
+
+declare global {
+  interface Navigator {
+    msSaveBlob?: (blob: any, defaultName?: string) => boolean;
+  }
+}
 
 @Component({
   selector: 'app-daily-report',
@@ -50,6 +57,7 @@ export class DailyReportComponent implements OnInit, DoCheck {
   dailyReportList = [];
   today!: Date;
   maxEndDate!: Date;
+  criteriaHead: any;
 
   ngOnInit() {
     this.providerServiceMapID = localStorage.getItem('tm-providerServiceMapID');
@@ -121,92 +129,109 @@ export class DailyReportComponent implements OnInit, DoCheck {
   }
 
   exportToxlsx(criteria: any) {
+    if (criteria.length > 0) {
+      const criteriaArray = criteria.filter(function (obj: any) {
+        for (const key in obj) {
+          if (obj[key] === null) {
+            obj[key] = '';
+          }
+        }
+        return obj;
+      });
+      if (criteriaArray.length !== 0) {
+        this.criteriaHead = Object.keys(criteriaArray[0]);
+        console.log('this.criteriaHead', this.criteriaHead);
+      }
+    }
     if (this.dailyReportList.length > 0) {
-      const array = this.checkDataForNull();
-      if (array.length != 0) {
+      const array = this.dailyReportList.filter(function (obj: any) {
+        for (const key in obj) {
+          if (obj[key] === null) {
+            obj[key] = '';
+          }
+        }
+        return obj;
+      });
+      if (array.length !== 0) {
         const head = Object.keys(array[0]);
+        console.log('head', head);
         const wb_name = 'Daily Report';
-        const criteria_worksheet: XLSX.WorkSheet =
-          XLSX.utils.json_to_sheet(criteria);
-        const report_worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
-          this.dailyReportList,
-          { header: head },
-        );
+        let i = 65; // starting from 65 since it is the ASCII code of 'A'.
+        let count = 0;
+        while (i < head.length + 65) {
+          let j;
+          if (count > 0) {
+            j = i - 26 * count;
+          } else {
+            j = i;
+          }
+          const cellPosition = String.fromCharCode(j);
+          let finalCellName: any;
+          if (count === 0) {
+            finalCellName = cellPosition + '1';
+            console.log(finalCellName);
+          } else {
+            const newcellPosition = String.fromCharCode(64 + count);
+            finalCellName = newcellPosition + cellPosition + '1';
+            console.log(finalCellName);
+          }
+          const newName = this.modifyHeader(head, i);
+          // delete report_worksheet[finalCellName].w; report_worksheet[finalCellName].v = newName;
+          i++;
+          if (i === 91 + count * 26) {
+            // i = 65;
+            count++;
+          }
+        }
 
-        const data = this.assignDataToColumns(head, report_worksheet);
-        this.createWorkBook(data, wb_name, criteria_worksheet);
+        const workbook = new ExcelJS.Workbook();
+        const criteria_worksheet = workbook.addWorksheet('Criteria');
+        const report_worksheet = workbook.addWorksheet('Report');
+
+        report_worksheet.addRow(head);
+        criteria_worksheet.addRow(this.criteriaHead);
+
+        // Add data
+        criteria.forEach((row: { [x: string]: any }) => {
+          const rowData: any[] = [];
+          this.criteriaHead.forEach((header: string | number) => {
+            rowData.push(row[header]);
+          });
+          criteria_worksheet.addRow(rowData);
+        });
+
+        this.dailyReportList.forEach((row: { [x: string]: any }) => {
+          const rowData: any[] = [];
+          head.forEach((header) => {
+            rowData.push(row[header]);
+          });
+          report_worksheet.addRow(rowData);
+        });
+
+        workbook.xlsx.writeBuffer().then((buffer) => {
+          const blob = new Blob([buffer], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          });
+          saveAs(blob, wb_name + '.xlsx');
+          if (navigator.msSaveBlob) {
+            navigator.msSaveBlob(blob, wb_name);
+          } else {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute('visibility', 'hidden');
+            link.download = wb_name.replace(/ /g, '_') + '.xlsx';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
+        });
       }
       this.confirmationService.alert(
-        this.currentLanguageSet.dailyReportdownloaded,
+        this.currentLanguageSet.monthlyReportdownloaded,
         'success',
       );
     } else {
       this.confirmationService.alert(this.currentLanguageSet.norecordfound);
-    }
-  }
-  checkDataForNull() {
-    const array = this.dailyReportList.filter(function (obj: any) {
-      for (const key in obj) {
-        if (obj[key] == null) {
-          obj[key] = '';
-        }
-      }
-      return obj;
-    });
-    return array;
-  }
-  assignDataToColumns(head: any, report_worksheet: any) {
-    let i = 65; // starting from 65 since it is the ASCII code of 'A'.
-    let count = 0;
-    while (i < head.length + 65) {
-      let j;
-      if (count > 0) {
-        j = i - 26 * count;
-      } else {
-        j = i;
-      }
-      const cellPosition = String.fromCharCode(j);
-      let finalCellName: any;
-      if (count == 0) {
-        finalCellName = cellPosition + '1';
-        console.log(finalCellName);
-      } else {
-        const newcellPosition = String.fromCharCode(64 + count);
-        finalCellName = newcellPosition + cellPosition + '1';
-        console.log(finalCellName);
-      }
-      const newName = this.modifyHeader(head, i);
-      delete report_worksheet[finalCellName].w;
-      report_worksheet[finalCellName].v = newName;
-      i++;
-      if (i == 91 + count * 26) {
-        count++;
-      }
-    }
-    return report_worksheet;
-  }
-  createWorkBook(data: any, wb_name: any, criteria_worksheet: any) {
-    const workbook: XLSX.WorkBook = {
-      Sheets: { Report: data, Criteria: criteria_worksheet },
-      SheetNames: ['Criteria', 'Report'],
-    };
-    const excelBuffer: any = XLSX.write(workbook, {
-      bookType: 'xlsx',
-      type: 'array',
-    });
-    const blob = new Blob([excelBuffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    if ((navigator as any).msSaveBlob) {
-      (navigator as any).msSaveBlob(blob, wb_name);
-    } else {
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.setAttribute('visibility', 'hidden');
-      link.download = wb_name.replace(/ /g, '_') + '.xlsx';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
     }
   }
 

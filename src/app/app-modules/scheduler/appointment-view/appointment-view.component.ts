@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, DoCheck } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  DoCheck,
+  ViewChild,
+} from '@angular/core';
 import { SchedulerService } from '../shared/services/scheduler.service';
 import { ConfirmationService } from '../../core/services/confirmation.service';
 
@@ -7,6 +13,8 @@ import { CameraService } from '../../core/services/camera.service';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 import { HttpServiceService } from '../../core/services/http-service.service';
 import * as moment from 'moment';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 @Component({
   selector: 'app-appointment-view',
   templateUrl: './appointment-view.component.html',
@@ -24,7 +32,8 @@ export class AppointmentViewComponent implements OnInit, OnDestroy, DoCheck {
   beneficiaryList = [];
   filteredBeneficiaryList: any[] = [];
 
-  pagedList: any[] = [];
+  pagedList = new MatTableDataSource<any>();
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   rowsPerPage = 5;
   activePage = 1;
   rotate = true;
@@ -32,6 +41,17 @@ export class AppointmentViewComponent implements OnInit, OnDestroy, DoCheck {
   blankTable = [];
   filterTerm: string | null = null;
   currentLanguageSet: any;
+  displayedColumns: string[] = [
+    'sNo',
+    'beneficiaryID',
+    'beneficiaryName',
+    'age',
+    'visitCategory',
+    'visitDate',
+    'tCDate',
+    'image',
+    'actions',
+  ];
 
   constructor(
     private schedulerService: SchedulerService,
@@ -192,7 +212,11 @@ export class AppointmentViewComponent implements OnInit, OnDestroy, DoCheck {
   pageChanged(event: any): void {
     const startItem = (event.page - 1) * event.itemsPerPage;
     const endItem = event.page * event.itemsPerPage;
-    this.pagedList = this.filteredBeneficiaryList.slice(startItem, endItem);
+    this.pagedList.data = this.filteredBeneficiaryList.slice(
+      startItem,
+      endItem,
+    );
+    this.pagedList.paginator = this.paginator;
   }
 
   patientImageView(benregID: any) {

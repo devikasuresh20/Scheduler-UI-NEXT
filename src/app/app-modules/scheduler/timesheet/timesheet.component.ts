@@ -430,7 +430,11 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
       configuredToTime: null,
     });
     if (this.isAvailability === 'true') {
-      this.availabiltyForm.get('configuredToDate')!.clearValidators();
+      const configuredToDateControl =
+        this.availabiltyForm.get('configuredToDate');
+      if (configuredToDateControl) {
+        configuredToDateControl.clearValidators();
+      }
     } else {
       this.configuredToDateBoolean = false;
     }

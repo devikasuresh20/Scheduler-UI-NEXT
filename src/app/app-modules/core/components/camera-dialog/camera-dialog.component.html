@@ -1,27 +1,130 @@
-<div class="container-fluid dialog" *ngIf="capture">
-  <mat-dialog-content>
-    <div class="row">
-      <webcam
+<!-- <div class="container-fluid dialog" *ngIf="capture">
+
+    <mat-dialog-content>
+        <div class="row">
+            <a (click)="captureBase64()">
+                <webcam
         [width]="options.width"
         [height]="options.height"
         #workarea
         [trigger]="triggerObservable"
         [videoOptions]="options"
         (imageCapture)="captureImage($event)"
-        (initError)="handleInitError($event)"
-      >
+        (initError)="handleInitError($event)">
       </webcam>
-      <div *ngIf="webcamInitError">
-        Webcam initialization failed: {{ webcamInitError.message }}
-      </div>
-      <a
-        (click)="recaptureImage()"
-        tabindex="0"
-        (keydown)="handleKeyDownRecaptureImg($event)"
-        *ngIf="captured"
-        >Retry</a
-      >
-      <img id="photo" [src]="base64" alt="base64" *ngIf="captured" />
+                <webcam class="row" #workarea [(ref)]="webcam" [options]="options" (onSuccess)="onSuccess($event)" *ngIf="!captured"
+                    (onError)="onError($event)"></webcam>
+
+
+            <a (click)="captureBase64()">
+                <img id="photo" [src]="base64" alt="base64" *ngIf="captured" />
+    </a>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <h3 mat-dialog-title>
+            <div class="row">
+                <button mat-raised-button color="primary" (click)="dialogRef.close(false) ">{{currentLanguageSet?.cancel}}</button>
+                <button mat-raised-button color="primary" (click)="captureBase64()">{{status}}</button>
+                <button mat-raised-button color="primary" [disabled]="!captured" [mat-dialog-close]="base64">{{currentLanguageSet?.proceed}}</button>
+            </div>
+        </h3>
+    </mat-dialog-actions>
+</div>
+
+
+<div class="container-fluid dialog" *ngIf="imageCode">
+    <mat-dialog-content>
+        <div class="row">
+            <img id="photo" [src]="imageCode" alt="imageCode" />
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <div class="row">
+            <button mat-raised-button color="primary" mat-dialog-close>{{currentLanguageSet?.close}}</button>
+        </div>
+    </mat-dialog-actions>
+</div>
+
+
+<div class="container-fluid dialog" *ngIf="!imageCode && !capture && !annotate && !graph">
+    <mat-dialog-content>
+        <div class="row">
+            <h3> {{currentLanguageSet?.noDataAvailable}} </h3>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <div class="row">
+            <button mat-raised-button color="primary" mat-dialog-close>{{currentLanguageSet?.close}}</button>
+        </div>
+    </mat-dialog-actions>
+</div>
+
+<div class="container-fluid dialog" *ngIf="annotate">
+    <mat-dialog-content>
+        <div class="row">
+            <div class="col-md-5 col-sm-5 text-center">
+                <div [hidden]="true">
+                    <img #myImg [src]="annotate" alt="annotate">
+                </div>
+                <canvas width="250" height="250" (click)="pointMark($event)" #myCanvas style="border:1px solid #d3d3d3;"></canvas>
+            </div>
+
+            <div class="col-md-7 overflown col-sm-7">
+                <h4>{{currentLanguageSet?.markDescriptions}}</h4>
+                <div *ngFor="let mark of markers">
+                    <mat-form-field [style.width]="'100%'">
+                        <input autocomplete="off" matInput placeholder="{{mark.point}}." maxlength="30" [(ngModel)]="mark.description">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="center">
+        <div class="row">
+            <button mat-raised-button color="primary" mat-dialog-close>{{currentLanguageSet?.close}}</button>
+            <button mat-raised-button color="primary" [disabled]="!markers.length" (click)="clearPointers()">{{currentLanguageSet?.reset}}</button>
+            <button mat-raised-button color="primary" [disabled]="!markers.length" [mat-dialog-close]="getMarkers()">{{currentLanguageSet?.save}}</button>
+        </div>
+    </mat-dialog-actions>
+</div>
+
+<div class="container-fluid dialog" *ngIf="graph">
+
+    <mat-dialog-content id="container-dialog" style="max-height: unset !important;">
+        <h4 *ngIf="graph?.type == 'bw'"> {{currentLanguageSet?.bodyWeightTrends}} </h4>
+        <h4 *ngIf="graph?.type == 'bg'"> {{currentLanguageSet?.bloodGlucoseTrends}} </h4>
+        <h4 *ngIf="graph?.type == 'bp'"> {{currentLanguageSet?.bloodPressureTrends}} </h4>
+        <canvas baseChart [datasets]="graph?.chartData" [labels]="graph?.chartLabels" [options]="graph?.lineChartOptions" [colors]="graph?.chartColors"
+            [legend]="graph?.chartLegend" [chartType]="graph?.chartType"></canvas>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="center">
+        <div class="row">
+            <button mat-raised-button mat-dialog-close> {{currentLanguageSet?.close}} </button>
+            <button mat-raised-button color="primary" (click)="downloadGraph()">Download</button>
+        </div>
+    </mat-dialog-actions>
+</div> -->
+<div class="container-fluid dialog" *ngIf="capture">
+  <mat-dialog-content>
+    <div class="row">
+      <webcam
+        *ngIf="!captured"
+        [width]="options.width"
+        [height]="options.height"
+        #workarea
+        [trigger]="triggerObservable"
+        (imageCapture)="captureImg($event)"
+      ></webcam>
+
+      <img
+        *ngIf="webcamImage"
+        [src]="webcamImage.imageAsDataUrl"
+        alt="sys"
+        height="400px"
+      />
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
@@ -30,6 +133,8 @@
         <button
           mat-raised-button
           color="primary"
+          class="mat_blue col-2"
+          style="width: 12%; margin-right: 5px"
           (click)="dialogRef.close(false)"
         >
           {{ currentLanguageSet?.cancel }}
@@ -37,15 +142,19 @@
         <button
           mat-raised-button
           color="primary"
-          (click)="captureImageButton()"
+          class="mat_blue col-2"
+          style="width: 12%; margin-right: 5px"
+          (click)="getSnapshot()"
         >
           {{ status }}
         </button>
         <button
           mat-raised-button
           color="primary"
+          class="mat_blue col-2"
+          style="width: 12%; margin-right: 5px"
           [disabled]="!captured"
-          [mat-dialog-close]="base64"
+          [mat-dialog-close]="sysImage"
         >
           {{ currentLanguageSet?.proceed }}
         </button>
@@ -57,12 +166,22 @@
 <div class="container-fluid dialog" *ngIf="imageCode">
   <mat-dialog-content>
     <div class="row">
-      <img id="photo" [src]="imageCode" alt="imageCode" />
+      <img
+        *ngIf="webcamImage"
+        [src]="webcamImage.imageAsDataUrl"
+        alt="sys"
+        height="400px"
+      />
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
     <div class="row">
-      <button mat-raised-button color="primary" mat-dialog-close>
+      <button
+        mat-raised-button
+        color="primary"
+        class="mat_blue"
+        mat-dialog-close
+      >
         {{ currentLanguageSet?.close }}
       </button>
     </div>
@@ -75,12 +194,19 @@
 >
   <mat-dialog-content>
     <div class="row">
-      <h3>{{ currentLanguageSet?.noDataAvailable }}</h3>
+      <h3>
+        {{ currentLanguageSet?.noDataAvailable }}
+      </h3>
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
     <div class="row">
-      <button mat-raised-button color="primary" mat-dialog-close>
+      <button
+        mat-raised-button
+        color="primary"
+        class="mat_blue"
+        mat-dialog-close
+      >
         {{ currentLanguageSet?.close }}
       </button>
     </div>
@@ -109,7 +235,7 @@
           <mat-form-field [style.width]="'100%'">
             <input
               autocomplete="off"
-              mdInput
+              matInput
               placeholder="{{ mark.point }}."
               maxlength="30"
               [(ngModel)]="mark.description"
@@ -121,13 +247,21 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="center">
-    <div class="row">
-      <button mat-raised-button color="primary" mat-dialog-close>
+    <div class="col-12 row">
+      <button
+        mat-raised-button
+        color="primary"
+        class="mat_blue col-2"
+        style="width: 12%; margin-right: 5px"
+        mat-dialog-close
+      >
         {{ currentLanguageSet?.close }}
       </button>
       <button
         mat-raised-button
         color="primary"
+        style="width: 12%; margin-right: 5px"
+        class="mat_blue col-2"
         [disabled]="!markers.length"
         (click)="clearPointers()"
       >
@@ -136,6 +270,8 @@
       <button
         mat-raised-button
         color="primary"
+        class="mat_blue col-2"
+        style="width: 12%; margin-right: 5px"
         [disabled]="!markers.length"
         [mat-dialog-close]="getMarkers()"
       >
@@ -173,10 +309,15 @@
   <mat-dialog-actions align="center">
     <div class="row">
       <button mat-raised-button mat-dialog-close>
-        {{ currentLanguageSet?.close }}
+        {{ currentLanguageSet?.coreComponents?.close }}
       </button>
-      <button mat-raised-button color="primary" (click)="downloadGraph()">
-        Download
+      <button
+        mat-raised-button
+        color="primary"
+        class="mat_blue"
+        (click)="downloadGraph()"
+      >
+        {{ currentLanguageSet?.coreComponents?.download }}
       </button>
     </div>
   </mat-dialog-actions>

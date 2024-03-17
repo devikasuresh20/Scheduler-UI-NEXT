@@ -86,7 +86,6 @@
                   matInput
                   [matDatepicker]="configuredFromDatePicker"
                   class="input-full-width"
-                  placeholder="{{ currentLanguageSet?.fromDate }}"
                   name="configuredFromDate"
                   formControlName="configuredFromDate"
                   readonly
@@ -95,7 +94,7 @@
                   required
                 />
                 <mat-datepicker-toggle
-                  matSuffix
+                  matPrefix
                   [for]="configuredFromDatePicker"
                 ></mat-datepicker-toggle>
                 <mat-datepicker #configuredFromDatePicker></mat-datepicker>
@@ -108,7 +107,6 @@
                   matInput
                   [matDatepicker]="configuredToDatePicker"
                   class="input-full-width"
-                  placeholder="{{ currentLanguageSet?.toDate }}"
                   formControlName="configuredToDate"
                   readonly
                   name="configuredToDate"
@@ -117,7 +115,7 @@
                   [required]="configuredToDateBoolean"
                 />
                 <mat-datepicker-toggle
-                  matSuffix
+                  matPrefix
                   [for]="configuredToDatePicker"
                 ></mat-datepicker-toggle>
                 <mat-datepicker #configuredToDatePicker></mat-datepicker>
@@ -130,16 +128,13 @@
                   matInput
                   [matDatepicker]="configuredFromTimePicker"
                   type="time"
-                  [timeInterval]="5"
                   class="input-full-width"
-                  [openOnFocus]="true"
-                  placeholder="{{ currentLanguageSet?.fromTime }}"
                   formControlName="configuredFromTime"
                   name="configuredFromTime"
                   required
                 />
                 <mat-datepicker-toggle
-                  matSuffix
+                  matPrefix
                   [for]="configuredFromTimePicker"
                 ></mat-datepicker-toggle>
                 <mat-datepicker #configuredFromTimePicker></mat-datepicker>
@@ -152,10 +147,7 @@
                   matInput
                   [matDatepicker]="configuredToTimePicker"
                   type="time"
-                  [timeInterval]="5"
                   class="input-full-width"
-                  [openOnFocus]="true"
-                  placeholder="{{ currentLanguageSet?.toTime }}"
                   formControlName="configuredToTime"
                   name="configuredToTime"
                   [min]="
@@ -167,7 +159,7 @@
                   required
                 />
                 <mat-datepicker-toggle
-                  matSuffix
+                  matPrefix
                   [for]="configuredToTimePicker"
                 ></mat-datepicker-toggle>
                 <mat-datepicker #configuredToTimePicker></mat-datepicker>

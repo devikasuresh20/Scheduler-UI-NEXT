@@ -32,7 +32,7 @@
           <td mat-cell *matCellDef="let data">{{ data[column.keyName] }}</td>
         </ng-container>
         <mat-paginator
-          [length]="filteredDataList.length"
+          [length]="filteredDataList.data.length"
           [pageSize]="5"
           [pageIndex]="1"
         >

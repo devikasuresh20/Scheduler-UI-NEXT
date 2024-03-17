@@ -19,12 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService } from '../../../core/services/confirmation.service';
 import { SchedulerService } from '../../shared/services';
 import { Router } from '@angular/router';
 import { SetLanguageComponent } from '../../../core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 @Component({
   selector: 'app-sms-template-list',
   templateUrl: './sms-template-list.component.html',
@@ -33,7 +35,8 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 export class SmsTemplateListComponent implements OnInit, DoCheck {
   languageComponent!: SetLanguageComponent;
   currentLanguageSet: any;
-  templateList: any = [];
+  templateList = new MatTableDataSource<any>();
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   displayedColumns: string[] = [
     'sNo',
     'templateName',
@@ -61,7 +64,8 @@ export class SmsTemplateListComponent implements OnInit, DoCheck {
       next: (res: any) => {
         console.log('res', res);
         if (res && res.statusCode == 200) {
-          this.templateList = res.data;
+          this.templateList.data = res.data;
+          this.templateList.paginator = this.paginator;
         } else {
           this.confirmationService.alert(res.errorMessage, 'error');
         }

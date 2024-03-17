@@ -5,46 +5,48 @@
 <div class="m-b-10">
   <form [formGroup]="monthlyReportForm">
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-      <input
-        matInput
-        [matDatepicker]="fromDatePicker"
-        type="month"
-        class="width100"
-        placeholder="{{ currentLanguageSet?.fromDate }}"
-        name="fromDate"
-        id="fromDate"
-        formControlName="fromDate"
-        readonly
-        (change)="checkEndDate()"
-        [max]="maxEndDate"
-        required
-      />
-      <mat-datepicker-toggle
-        matSuffix
-        [for]="fromDatePicker"
-      ></mat-datepicker-toggle>
-      <mat-datepicker #fromDatePicker></mat-datepicker>
+      <mat-form-field class="input-full-width">
+        <mat-label>{{ currentLanguageSet?.fromDate }}</mat-label>
+        <input
+          readonly
+          matInput
+          [matDatepicker]="fromDatePicker"
+          type="month"
+          name="fromDate"
+          id="fromDate"
+          formControlName="fromDate"
+          (change)="checkEndDate()"
+          [max]="maxEndDate"
+          required
+        />
+        <mat-datepicker-toggle
+          matPrefix
+          [for]="fromDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #fromDatePicker></mat-datepicker>
+      </mat-form-field>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-      <input
-        matInput
-        [matDatepicker]="toDatePicker"
-        type="month"
-        class="width100"
-        placeholder="{{ currentLanguageSet?.toDate }}"
-        name="toDate"
-        id="toDate"
-        formControlName="toDate"
-        readonly
-        [min]="minEndDate"
-        [max]="maxEndDate"
-        required
-      />
-      <mat-datepicker-toggle
-        matSuffix
-        [for]="toDatePicker"
-      ></mat-datepicker-toggle>
-      <mat-datepicker #toDatePicker></mat-datepicker>
+      <mat-form-field class="input-full-width">
+        <mat-label>{{ currentLanguageSet?.toDate }}</mat-label>
+        <input
+          readonly
+          matInput
+          [matDatepicker]="toDatePicker"
+          type="month"
+          name="toDate"
+          id="toDate"
+          formControlName="toDate"
+          [min]="minEndDate"
+          [max]="maxEndDate"
+          required
+        />
+        <mat-datepicker-toggle
+          matPrefix
+          [for]="toDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #toDatePicker></mat-datepicker>
+      </mat-form-field>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
       <mat-select
