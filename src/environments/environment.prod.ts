@@ -24,9 +24,9 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-const commonIP = 'http://10.208.122.192:8080/';
-const tmIP = 'http://10.208.122.192:8080/';
-const schedulerIP = 'http://10.208.122.192:8080/';
+const commonIP = 'https://183.82.107.186:8080/';
+const tmIP = 'https://183.82.107.186:8080/';
+const schedulerIP = 'https://183.82.107.186:8080/';
 
 // Without API MAN Configuration
 const COMMON_API_OPEN = `${commonIP}commonapi-v1.0/`;
