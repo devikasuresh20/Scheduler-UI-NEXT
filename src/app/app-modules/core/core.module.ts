@@ -35,7 +35,6 @@ import { BeneficiaryDetailsService } from './services/beneficiary-details.servic
 import { CanDeactivateGuardService } from './services/can-deactivate-guard.service';
 import { GlobalErrorHandler } from './services/global-error-handler.service';
 import { CameraService } from './services/camera.service';
-import { HttpInterceptor } from './services/http-interceptor.service';
 import { CameraDialogComponent } from './components/camera-dialog/camera-dialog.component';
 import { AppFooterComponent } from './components/app-footer/app-footer.component';
 import { AppHeaderComponent } from './components/app-header/app-header.component';
@@ -44,7 +43,6 @@ import { PreviousDetailsComponent } from './components/previous-details/previous
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { TextareaDialogComponent } from './components/textarea-dialog/textarea-dialog.component';
 import { NullDefaultValueDirective } from './directives/null-default-value.directive';
-import { FullCalendarModule } from '@fullcalendar/angular';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModuleWithProviders, NgModule } from '@angular/core';
@@ -65,6 +63,8 @@ import { myNameDirective } from './directives/name/myName.directive';
 import { NumberValidatorDirective } from './directives/numberValidator.directive';
 import { myPasswordDirective } from './directives/password/myPassword.directive';
 import { StringValidatorDirective } from './directives/stringValidator.directive';
+import { HttpInterceptorService } from './services/http-interceptor.service';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 @NgModule({
   imports: [
@@ -138,7 +138,7 @@ export class CoreModule {
         ConfirmationService,
         CameraService,
         BeneficiaryDetailsService,
-        HttpInterceptor,
+        HttpInterceptorService,
         HttpServiceService,
         AuthGuard,
         AuthService,

@@ -53,7 +53,7 @@ export class SpecializationCalanderViewComponent implements OnInit, DoCheck {
 
   getSpecialisationMaster() {
     this.schedulerService.getSpecializationMaster().subscribe((res: any) => {
-      if (res.statusCode == 200 && res.data) {
+      if (res.statusCode === 200 && res.data) {
         this.specializationMaster = res.data;
       }
     });

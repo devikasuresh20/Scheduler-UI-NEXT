@@ -41,8 +41,8 @@ import { MonthlyReportComponent } from './reports/monthly-report/monthly-report.
 import { DailyReportComponent } from './reports/daily-report/daily-report.component';
 import { MatTableModule } from '@angular/material/table';
 import { MaterialModule } from '../core/material.module';
-import { FullCalendarModule } from '@fullcalendar/angular';
 import { NgChartsModule } from 'ng2-charts';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 @NgModule({
   imports: [

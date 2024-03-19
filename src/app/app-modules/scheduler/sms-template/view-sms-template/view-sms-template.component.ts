@@ -55,7 +55,7 @@ export class ViewSmsTemplateComponent implements OnInit, DoCheck {
     this.schedulerService.getFullSMSTemplate(reqObj).subscribe({
       next: (res: any) => {
         console.log('res', res);
-        if (res && res.statusCode == 200) {
+        if (res && res.statusCode === 200) {
           this.fullSMSTemplate = res.data;
         } else {
           this.confirmationService.alert(res.errorMessage, 'error');

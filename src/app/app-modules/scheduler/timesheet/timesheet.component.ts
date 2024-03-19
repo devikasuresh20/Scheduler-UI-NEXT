@@ -30,7 +30,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { FullCalendarComponent } from '@fullcalendar/angular';
 import { Moment } from 'moment';
 
 import { SchedulerService } from '../shared/services/scheduler.service';
@@ -38,6 +37,7 @@ import { ConfirmationService } from '../../core/services/confirmation.service';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 import { HttpServiceService } from '../../core/services/http-service.service';
 import { Options } from 'html2canvas';
+import { FullCalendarComponent } from '@fullcalendar/angular';
 
 @Component({
   selector: 'app-timesheet',
@@ -106,7 +106,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
     let userInfo;
     this.route.params.subscribe((param) => {
       this.designation = param['designation'];
-      if (this.designation == 'TC Specialist') {
+      if (this.designation === 'TC Specialist') {
         userInfo = { userID: localStorage.getItem('tm-userID') };
       } else {
         userInfo = { userID: localStorage.getItem('supervisor-specialistID') };
@@ -166,7 +166,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
   markAvailability(availabiltyForm: FormGroup, availabilityFormValue: any) {
     this.schedulerService.markAvailability(availabilityFormValue).subscribe({
       next: (res: any) => {
-        if (res.statusCode == 200 && res.data) {
+        if (res.statusCode === 200 && res.data) {
           this.confirmationService.alert(
             this.currentLanguageSet.markedSuccessfully,
             'success',
@@ -192,7 +192,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
       .markNonAvailability(nonAvailabilityFormValue)
       .subscribe({
         next: (res: any) => {
-          if (res.statusCode == 200 && res.data) {
+          if (res.statusCode === 200 && res.data) {
             this.confirmationService.alert(
               this.currentLanguageSet.markedSuccessfully,
               'success',
@@ -243,7 +243,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
     this.schedulerService
       .getAllEvents(userInfo, date.getFullYear(), date.getMonth() + 1)
       .subscribe((res: any) => {
-        if (res.statusCode == 200 && res.data) {
+        if (res.statusCode === 200 && res.data) {
           const eventSourceList = res.data;
           const eventSources = this.mapResponseToEventSources(eventSourceList);
           eventSources.forEach((eventSource) => {
@@ -257,7 +257,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
 
   getSpecialisationMaster() {
     this.schedulerService.getSpecializationMaster().subscribe((res: any) => {
-      if (res.statusCode == 200 && res.data) {
+      if (res.statusCode === 200 && res.data) {
         this.specializationMaster = res.data;
       }
     });
@@ -277,7 +277,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
       .getSpecialist({ specializationID, providerServiceMapID, userID })
       .subscribe({
         next: (res: any) => {
-          if (res.statusCode == 200 && res.data) {
+          if (res.statusCode === 200 && res.data) {
             this.specialistList = res.data;
           } else {
             this.specialistList = [];
@@ -296,7 +296,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
       const yearMonthDay = this.getDateString(dateObj);
       eventSource.slots.forEach((slot: any) => {
         const events = [];
-        const color = slot.status == 'Available' ? 'green' : 'red';
+        const color = slot.status === 'Available' ? 'green' : 'red';
         events.push({
           start: yearMonthDay + 'T' + slot.fromTime + 'Z',
           end: yearMonthDay + 'T' + slot.toTime + 'Z',
@@ -361,9 +361,9 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
     for (let i = 0; i < 24; i++) {
       for (let j = 0; j < 60; j = j + 5) {
         const hours =
-          i.toString().length == 1 ? 0 + i.toString() : i.toString();
+          i.toString().length === 1 ? 0 + i.toString() : i.toString();
         const minutes =
-          j.toString().length == 1 ? 0 + j.toString() : j.toString();
+          j.toString().length === 1 ? 0 + j.toString() : j.toString();
         this.timeList.push(hours + ':' + minutes + ':00');
       }
     }

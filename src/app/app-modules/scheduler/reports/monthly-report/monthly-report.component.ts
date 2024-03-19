@@ -80,7 +80,7 @@ export class MonthlyReportComponent implements OnInit, DoCheck {
       next: (res: any) => {
         console.log(res);
 
-        if (res && res.statusCode == 200) {
+        if (res && res.statusCode === 200) {
           if (res.data && res.data.length > 0) {
             this.vanMaster = res.data;
           } else {
@@ -113,14 +113,14 @@ export class MonthlyReportComponent implements OnInit, DoCheck {
   }
 
   checkEndDate() {
-    if (this.toDate == null) {
+    if (this.toDate === null) {
       this.minEndDate = new Date(this.fromDate);
     } else {
       this.monthlyReportForm.patchValue({
         toDate: null,
       });
       //(<FormGroup> this.monthlyReportForm.controls['toDate']).patchValue({ toDate: null });
-      if (this.fromDate != undefined && this.fromDate != null)
+      if (this.fromDate !== undefined && this.fromDate !== null)
         this.minEndDate = new Date(this.fromDate);
     }
   }
@@ -150,7 +150,7 @@ export class MonthlyReportComponent implements OnInit, DoCheck {
           'Json data of response: ',
           JSON.stringify(response, null, 2),
         );
-        if (response.statusCode == 200) {
+        if (response.statusCode === 200) {
           this.monthlyReportList = response.data;
           this.createSearchCriteria();
         }

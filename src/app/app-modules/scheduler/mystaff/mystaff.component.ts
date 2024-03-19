@@ -60,7 +60,7 @@ export class MystaffComponent implements OnInit, DoCheck {
     this.schedulerService
       .getAllSpecialist(specialistListReq)
       .subscribe((response: any) => {
-        if (response.statusCode == 200) {
+        if (response.statusCode === 200) {
           this.specialistList = response.data;
           this.filteredSpecialistList = response.data;
         }
@@ -70,7 +70,7 @@ export class MystaffComponent implements OnInit, DoCheck {
 
   getSpecialisationMaster() {
     this.schedulerService.getSpecializationMaster().subscribe((res: any) => {
-      if (res.statusCode == 200 && res.data) {
+      if (res.statusCode === 200 && res.data) {
         this.specializationMaster = res.data;
       }
     });
@@ -94,15 +94,15 @@ export class MystaffComponent implements OnInit, DoCheck {
 
   filterBySpec(selectedSpecialization: string, filteredSpecialist: any) {
     if (
-      selectedSpecialization == undefined ||
-      selectedSpecialization == null ||
-      selectedSpecialization == 'All'
+      selectedSpecialization === undefined ||
+      selectedSpecialization === null ||
+      selectedSpecialization === 'All'
     ) {
       return filteredSpecialist;
     } else {
       const filteredSpecialistList: any[] = [];
       filteredSpecialist.forEach((item: any) => {
-        if (item.specialization == this.selectedSpecialization) {
+        if (item.specialization === this.selectedSpecialization) {
           filteredSpecialistList.push(item);
         }
       });

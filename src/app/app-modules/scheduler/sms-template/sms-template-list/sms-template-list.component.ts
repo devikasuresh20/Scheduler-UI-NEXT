@@ -63,7 +63,7 @@ export class SmsTemplateListComponent implements OnInit, DoCheck {
     this.schedulerService.getAllSMSTemplates().subscribe({
       next: (res: any) => {
         console.log('res', res);
-        if (res && res.statusCode == 200) {
+        if (res && res.statusCode === 200) {
           this.templateList.data = res.data;
           this.templateList.paginator = this.paginator;
         } else {
@@ -93,7 +93,7 @@ export class SmsTemplateListComponent implements OnInit, DoCheck {
     this.schedulerService.updateSMSTemplate(template).subscribe({
       next: (res: any) => {
         console.log('res', res);
-        if (res && res.statusCode == 200) {
+        if (res && res.statusCode === 200) {
           if (flag) {
             this.confirmationService.alert(
               this.currentLanguageSet.deactivatedsuccessfully,

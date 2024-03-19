@@ -37,7 +37,7 @@ export class myEmailDirective implements Validator {
     /^[0-9a-zA-Z_.]+@[a-zA-Z_]+?\.\b(org|com|in|co.in|ORG|COM|IN|CO.IN)\b$/;
   validate(control: AbstractControl): { [key: string]: any } | null {
     const input = control.value;
-    if (input == '' || input == null) return null;
+    if (input === '' || input === null) return null;
 
     const flag = this.pattern.test(input);
     return flag

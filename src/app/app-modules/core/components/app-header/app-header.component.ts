@@ -66,7 +66,7 @@ export class AppHeaderComponent implements OnInit {
     this.userName = localStorage.getItem('tm-userName');
     this.fetchLanguageSet();
     this.isAuthenticated =
-      sessionStorage.getItem('tm-isAuthenticated') == 'true';
+      sessionStorage.getItem('tm-isAuthenticated') === 'true';
   }
 
   fetchLanguageSet() {
@@ -104,7 +104,7 @@ export class AppHeaderComponent implements OnInit {
 
   languageSuccessHandler(response: any, language: any) {
     console.log('language is ', response);
-    if (response == undefined) {
+    if (response === undefined) {
       alert(this.currentLanguageSet.langNotDefined);
     }
 
@@ -113,7 +113,7 @@ export class AppHeaderComponent implements OnInit {
       sessionStorage.setItem('setLanguage', language);
       if (this.currentLanguageSet) {
         this.languageArray.forEach((item: any) => {
-          if (item.languageName == language) {
+          if (item.languageName === language) {
             this.app_language = language;
           }
         });
@@ -222,7 +222,11 @@ export class AppHeaderComponent implements OnInit {
   }
 
   handleKeyDownSwymed(event: KeyboardEvent): void {
-    if (event.key == 'Enter' || event.key == 'Spacebar' || event.key == ' ') {
+    if (
+      event.key === 'Enter' ||
+      event.key === 'Spacebar' ||
+      event.key === ' '
+    ) {
       this.getSwymedLogout();
     }
   }
@@ -252,7 +256,7 @@ export class AppHeaderComponent implements OnInit {
   showVersionAndCommitDetails() {
     this.auth.getAPIVersionAndCommitDetails().subscribe({
       next: (res: any) => {
-        if (res.statusCode == 200) {
+        if (res.statusCode === 200) {
           this.constructAPIAndUIDetails(res.data);
         }
       },

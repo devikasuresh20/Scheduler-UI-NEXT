@@ -109,7 +109,7 @@ export class DailyReportComponent implements OnInit, DoCheck {
           'Json data of response: ',
           JSON.stringify(response, null, 4),
         );
-        if (response.statusCode == 200) {
+        if (response.statusCode === 200) {
           this.dailyReportList = response.data;
           this.createSearchCriteria();
         } else {

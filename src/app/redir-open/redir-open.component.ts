@@ -110,12 +110,12 @@ export class RedirOpenComponent implements OnInit {
   validateSessionKey() {
     this.authService.validateSessionKey().subscribe({
       next: (res: any) => {
-        if (res.statusCode == 200 && res.data) {
+        if (res.statusCode === 200 && res.data) {
           const TMPrevilegeObj = res.data.previlegeObj.filter(
             (previlege: any) => {
               if (
                 previlege.roles[0].serviceRoleScreenMappings[0]
-                  .providerServiceMapping.serviceID == '4'
+                  .providerServiceMapping.serviceID === 4
               ) {
                 return previlege;
               }
@@ -141,9 +141,9 @@ export class RedirOpenComponent implements OnInit {
               roles,
             });
             if (
-              roles.length == 1 &&
-              roles[0] == 'Supervisor' &&
-              designation == 'Supervisor'
+              roles.length === 1 &&
+              roles[0] === 'Supervisor' &&
+              designation === 'Supervisor'
             ) {
               this.router.navigate(['/telemedicine/myStaff']);
             } else {

@@ -32,7 +32,7 @@ export class DisableFormControlDirective {
 
     if (control) {
       const action = condition ? 'disable' : 'enable';
-      if (action == 'disable' && !control.disabled) {
+      if (action === 'disable' && !control.disabled) {
         control.setValue(null);
         control.markAsTouched();
         control[action]();

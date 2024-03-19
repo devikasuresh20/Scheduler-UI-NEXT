@@ -87,13 +87,13 @@ export class TotalConsultationReportComponent implements OnInit, DoCheck {
   }
 
   checkEndDate() {
-    if (this.toDate == null) {
+    if (this.toDate === null) {
       this.minEndDate = new Date(this.fromDate);
     } else {
       this.totalConsultationForm.patchValue({
         toDate: null,
       });
-      if (this.fromDate != undefined && this.fromDate != null)
+      if (this.fromDate !== undefined && this.fromDate !== null)
         this.minEndDate = new Date(this.fromDate);
     }
   }
@@ -124,7 +124,7 @@ export class TotalConsultationReportComponent implements OnInit, DoCheck {
             'Json data of response: ',
             JSON.stringify(response, null, 4),
           );
-          if (response.statusCode == 200) {
+          if (response.statusCode === 200) {
             this.totalConsultationList = response.data;
             this.createSearchCriteria();
           } else {

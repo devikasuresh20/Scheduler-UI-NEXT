@@ -85,7 +85,7 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
     this.schedulerService.getSMSType().subscribe({
       next: (res: any) => {
         console.log('res', res);
-        if (res && res.statusCode == 200) {
+        if (res && res.statusCode === 200) {
           this.masterSMSType = res.data;
           if (this.fullSMSTemplate) {
             this.createViewSMSTemplate();
@@ -111,7 +111,7 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
         this.fullSMSTemplate.smsType &&
         this.fullSMSTemplate.smsType.smsTypeID
       ) {
-        return smsType.smsTypeID == this.fullSMSTemplate.smsType.smsTypeID;
+        return smsType.smsTypeID === this.fullSMSTemplate.smsType.smsTypeID;
       } else {
         return false;
       }
@@ -156,7 +156,7 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
         }
       }
       this.parameters = tempParameters.filter(function (elem, index, self) {
-        return index == self.indexOf(elem);
+        return index === self.indexOf(elem);
       });
       this.parameters.push('SMS_PHONE_NO');
       if (this.parameters.length > 0) {
@@ -184,7 +184,7 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
     this.schedulerService.getSMSParameter().subscribe({
       next: (res: any) => {
         console.log('res', res);
-        if (res && res.statusCode == 200) {
+        if (res && res.statusCode === 200) {
           this.masterSMSParameter = res.data;
         } else {
           this.confirmationService.alert(res.errorMessage, 'error');
@@ -216,9 +216,9 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
       smsParameterValue: this.smsParameterValue.smsParameterName,
     };
     if (
-      reqObj.smsParameterName != undefined &&
-      reqObj.smsParameterType != undefined &&
-      reqObj.smsParameterID != undefined
+      reqObj.smsParameterName !== undefined &&
+      reqObj.smsParameterType !== undefined &&
+      reqObj.smsParameterID !== undefined
     ) {
       this.mappedSMSParameter.data.push(reqObj);
     } else {
@@ -261,7 +261,7 @@ export class CreateSmsTemplateComponent implements OnInit, DoCheck {
     this.schedulerService.saveSMSTemplate(requestObject).subscribe({
       next: (res: any) => {
         console.log('res', res);
-        if (res && res.statusCode == 200) {
+        if (res && res.statusCode === 200) {
           this.confirmationService
             .alertConfirm(
               this.currentLanguageSet.templateCreationSuccess,

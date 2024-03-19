@@ -87,7 +87,7 @@ export class CommonDialogComponent implements OnInit, DoCheck {
 
     if (timer && timer > 0) {
       this.intervalRef = setInterval(() => {
-        if (timer == 0) {
+        if (timer === 0) {
           clearInterval(this.intervalRef);
           this.dialogRef.close({ action: 'timeout' });
         } else {

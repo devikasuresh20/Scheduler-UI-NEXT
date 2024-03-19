@@ -92,14 +92,14 @@ export class ChiefComplaintReportComponent implements OnInit, DoCheck {
   checkEndDate() {
     console.log('', this.startDate);
 
-    if (this.endDate == null) {
+    if (this.endDate === null) {
       this.minEndDate = new Date(this.startDate);
       console.log('new Date(this.today.getDate() - 1);', new Date(this.today));
     } else {
       this.chiefComplaintForm.patchValue({
         endDate: null,
       });
-      if (this.startDate != undefined && this.startDate != null)
+      if (this.startDate !== undefined && this.startDate !== null)
         this.minEndDate = new Date(this.startDate);
     }
   }
@@ -145,7 +145,7 @@ export class ChiefComplaintReportComponent implements OnInit, DoCheck {
             'Json data of response: ',
             JSON.stringify(response, null, 4),
           );
-          if (response.statusCode == 200) {
+          if (response.statusCode === 200) {
             this.chiefComplaintRawData = response.data;
             console.log(
               'chiefComplaintRawData',

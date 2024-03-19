@@ -63,7 +63,7 @@ export class ProfileComponent implements OnInit, OnChanges, DoCheck {
     this.schedulerService
       .getSpecialistByUserID(userID)
       .subscribe((response: any) => {
-        if (response.statusCode == 200) {
+        if (response.statusCode === 200) {
           this.specialistData = response.data;
           console.log('Specialist Data..', this.specialistData);
         }
@@ -77,7 +77,7 @@ export class ProfileComponent implements OnInit, OnChanges, DoCheck {
   getChangedTab!: boolean;
   public tabChanged(tabChangeEvent: MatTabChangeEvent): void {
     console.log('changedtab', tabChangeEvent.index);
-    if (tabChangeEvent.index == 0) this.getChangedTab = true;
+    if (tabChangeEvent.index === 0) this.getChangedTab = true;
     else this.getChangedTab = false;
   }
 

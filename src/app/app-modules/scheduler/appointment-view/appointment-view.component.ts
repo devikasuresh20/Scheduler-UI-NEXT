@@ -79,7 +79,7 @@ export class AppointmentViewComponent implements OnInit, OnDestroy, DoCheck {
 
   getSpecializationMaster() {
     this.schedulerService.getSpecializationMaster().subscribe((res: any) => {
-      if (res.statusCode == 200 && res.data) {
+      if (res.statusCode === 200 && res.data) {
         this.specializationMaster = res.data;
       }
     });
@@ -97,7 +97,7 @@ export class AppointmentViewComponent implements OnInit, OnDestroy, DoCheck {
       .getSpecialist({ specializationID, providerServiceMapID, userID })
       .subscribe({
         next: (res: any) => {
-          if (res.statusCode == 200 && res.data) {
+          if (res.statusCode === 200 && res.data) {
             this.specialistList = res.data;
           } else {
             this.specialistList = [];
@@ -138,7 +138,7 @@ export class AppointmentViewComponent implements OnInit, OnDestroy, DoCheck {
       })
       .subscribe({
         next: (res: any) => {
-          if (res && res.statusCode == 200 && res.data) {
+          if (res && res.statusCode === 200 && res.data) {
             this.filterTerm = null;
             const benlist = this.loadDataToBenList(res.data);
             this.beneficiaryList = benlist;
@@ -165,13 +165,13 @@ export class AppointmentViewComponent implements OnInit, OnDestroy, DoCheck {
       this.beneficiaryList.forEach((item) => {
         for (const key in item) {
           if (
-            key == 'beneficiaryID' ||
-            key == 'benName' ||
-            key == 'genderName' ||
-            key == 'age' ||
-            key == 'benVisitDate' ||
-            key == 'VisitCategory' ||
-            key == 'benVisitNo'
+            key === 'beneficiaryID' ||
+            key === 'benName' ||
+            key === 'genderName' ||
+            key === 'age' ||
+            key === 'benVisitDate' ||
+            key === 'VisitCategory' ||
+            key === 'benVisitNo'
           ) {
             const value: string = '' + item[key];
             if (value.toLowerCase().indexOf(searchTerm.toLowerCase()) >= 0) {
