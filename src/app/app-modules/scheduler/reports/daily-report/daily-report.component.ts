@@ -26,7 +26,7 @@ import { ConfirmationService } from '../../../core/services/confirmation.service
 import { SetLanguageComponent } from '../../../core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import * as ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
+import * as saveAs from 'file-saver';
 
 declare global {
   interface Navigator {
