@@ -20,7 +20,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 /* SystemJS module definition */
-declare let module: NodeModule;
+
 interface NodeModule {
   id: string;
 }
