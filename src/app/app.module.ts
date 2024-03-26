@@ -50,7 +50,7 @@ import {
     CoreModule.forRoot(),
   ],
   providers: [
-    HttpClient,
+    HttpInterceptorService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
