@@ -45,7 +45,7 @@ import { TextareaDialogComponent } from './components/textarea-dialog/textarea-d
 import { NullDefaultValueDirective } from './directives/null-default-value.directive';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { LOCALE_ID, ModuleWithProviders, NgModule } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
@@ -65,7 +65,9 @@ import { myPasswordDirective } from './directives/password/myPassword.directive'
 import { StringValidatorDirective } from './directives/stringValidator.directive';
 import { HttpInterceptorService } from './services/http-interceptor.service';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 
+const lang = 'en-US';
 @NgModule({
   imports: [
     CommonModule,
@@ -86,6 +88,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     MatButtonModule,
     WebcamModule,
     NgChartsModule,
+    NgxMatTimepickerModule.setLocale(lang),
   ],
   declarations: [
     CommonDialogComponent,
@@ -135,6 +138,8 @@ export class CoreModule {
     return {
       ngModule: CoreModule,
       providers: [
+        { provide: LOCALE_ID, useValue: lang },
+
         ConfirmationService,
         CameraService,
         BeneficiaryDetailsService,

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '../core/core.module';
 import { SchedulerRoutingModule } from './scheduler-routing.module';
@@ -43,7 +43,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MaterialModule } from '../core/material.module';
 import { NgChartsModule } from 'ng2-charts';
 import { FullCalendarModule } from '@fullcalendar/angular';
-
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+const lang = 'en-US';
 @NgModule({
   imports: [
     CommonModule,
@@ -52,6 +53,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     MaterialModule,
     FullCalendarModule,
     NgChartsModule,
+    NgxMatTimepickerModule.setLocale(lang),
     CoreModule.forRoot(),
   ],
   declarations: [
@@ -71,6 +73,6 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     MonthlyReportComponent,
     DailyReportComponent,
   ],
-  providers: [SchedulerService],
+  providers: [SchedulerService, { provide: LOCALE_ID, useValue: lang }],
 })
 export class SchedulerModule {}

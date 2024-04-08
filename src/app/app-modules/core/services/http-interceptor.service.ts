@@ -48,18 +48,19 @@ export class HttpInterceptorService implements HttpInterceptor {
     private router: Router,
     private confirmationService: ConfirmationService,
     private http: HttpClient,
-    // private setLanguageService: SetLanguageService
   ) {}
 
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    const key: any = sessionStorage.getItem('key');
+    const key: any = sessionStorage.getItem('tm-key');
     let modifiedReq = null;
     if (key !== undefined && key !== null) {
       modifiedReq = req.clone({
-        headers: req.headers.set('Authorization', key),
+        headers: req.headers
+          .set('Authorization', key)
+          .set('Content-Type', 'application/json'),
       });
     } else {
       modifiedReq = req.clone({
@@ -69,18 +70,17 @@ export class HttpInterceptorService implements HttpInterceptor {
     return next.handle(modifiedReq).pipe(
       tap((event: HttpEvent<any>) => {
         if (req.url !== undefined && !req.url.includes('cti/getAgentState'))
-          if (event instanceof HttpResponse) {
-            this.spinnerService.show();
-            console.log(event.body);
-            this.onSuccess(req.url, event.body);
-            this.spinnerService.show();
-            return event.body;
-          }
+          this.spinnerService.setLoading(true);
+        if (event instanceof HttpResponse) {
+          console.log(event.body);
+          this.onSuccess(req.url, event.body);
+          this.spinnerService.setLoading(false);
+          return event.body;
+        }
       }),
       catchError((error: HttpErrorResponse) => {
         console.error(error);
-
-        this.spinnerService.show();
+        this.spinnerService.setLoading(false);
         return throwError(error.error);
       }),
     );

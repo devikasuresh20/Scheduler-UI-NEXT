@@ -77,6 +77,10 @@ export class RedirOpenComponent implements OnInit {
   }
 
   extractExternalSessionDetailsFromUrl() {
+    console.log(
+      'this.route.snapshot.queryParams',
+      this.route.snapshot.queryParams,
+    );
     const params = this.route.snapshot.queryParams;
     this.externalSession.protocol =
       params['protocol'] === 'undefined' ? undefined : params['protocol'];

@@ -36,8 +36,9 @@ import { SchedulerService } from '../shared/services/scheduler.service';
 import { ConfirmationService } from '../../core/services/confirmation.service';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 import { HttpServiceService } from '../../core/services/http-service.service';
-import { Options } from 'html2canvas';
-import { FullCalendarComponent } from '@fullcalendar/angular';
+import { CalendarOptions } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import { DateTime } from 'ts-luxon';
 
 @Component({
   selector: 'app-timesheet',
@@ -47,9 +48,20 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
 export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
   @Input()
   getChangedTab!: boolean;
+  calendarOptions!: CalendarOptions;
 
-  @ViewChild(FullCalendarComponent) ucCalendar!: FullCalendarComponent;
-  calendarOptions: Options | null = null;
+  // calendarOptions: CalendarOptions = {
+  //   plugins: [dayGridPlugin],
+  //   initialView: 'dayGridMonth',
+  //   weekends: false,
+  //   events: [
+  //     { title: 'Meeting', start: new Date() }
+  //   ]
+  // };
+  // @ViewChild(FullCalendarComponent) ucCalendar!: FullCalendarComponent;
+  // calendarOptions: Options | null = null;
+  // @ViewChild(CalendarComponent) ucCalendar!: CalendarComponent;
+  // calendarOptions: Options;
 
   availabiltyForm!: FormGroup;
   timeList: any[] = [];
@@ -67,6 +79,13 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
 
   languageComponent!: SetLanguageComponent;
   currentLanguageSet: any;
+  maxTime: DateTime = DateTime.local().set({
+    hour: 16,
+  });
+  minTime: DateTime = DateTime.local().set({
+    hour: 14,
+  });
+  @ViewChild('timepicker') timepicker: any;
 
   constructor(
     private fb: FormBuilder,
@@ -85,9 +104,15 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
   ngOnChanges() {
     if (this.getChangedTab) {
       this.initializeCalender();
-      this.calendarOptions = null;
+      // this.calendarOptions = null;
     }
   }
+
+  // openFromIcon(timepicker: { open: () => void }) {
+  //   if (!this.configuredFromTime.disabled) {
+  //     timepicker.open();
+  //   }
+  // }
 
   initializeCalender() {
     this.createAvailabiltyForm();
@@ -103,8 +128,11 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
   }
 
   getUserDesignation() {
+    console.log('this.route.params', this.route.params);
     let userInfo;
+    console.log('Hi Parth');
     this.route.params.subscribe((param) => {
+      console.log('param', param);
       this.designation = param['designation'];
       if (this.designation === 'TC Specialist') {
         userInfo = { userID: localStorage.getItem('tm-userID') };
@@ -173,7 +201,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
           );
           availabiltyForm.reset();
           availabiltyForm.markAsPristine();
-          this.calendarOptions = null;
+          // this.calendarOptions = null;
           this.initializeCalender();
         } else {
           this.confirmationService.alert(res.errorMessage, 'warn');
@@ -200,7 +228,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
             availabiltyForm.reset();
             availabiltyForm.markAsPristine();
             this.initDayList();
-            this.ucCalendar.getApi().removeAllEventSources();
+            // this.ucCalendar.fullCalendar('removeEventSources');;
             this.getMonthEvents(new Date());
           } else {
             this.confirmationService.alert(res.errorMessage, 'warn');
@@ -213,14 +241,21 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
   }
 
   clickButton(model: any) {
+    const action = model.buttonType;
     const temp = model.data as Moment;
-    this.ucCalendar.getApi().removeAllEventSources();
+    // this.ucCalendar.fullCalendar('removeEventSources');;
     this.getMonthEvents(temp.toDate());
+    // const temp = model.data as Moment;
+    // this.ucCalendar.getApi().removeAllEventSources();
+    // this.getMonthEvents(temp.toDate());
   }
 
   initCalender(eventSources?: any) {
     this.calendarOptions = {
-      themeSystem: 'bootstrap3',
+      themeSystem: 'bootstrap5',
+      plugins: [dayGridPlugin],
+      initialView: 'dayGridMonth',
+      weekends: false,
       editable: false,
       eventLimit: true,
       header: {
@@ -232,7 +267,23 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
       displayEventTime: true,
       timeFormat: 'HH:mm',
       eventSources: eventSources || [],
+      events: [{ title: 'Meeting', start: new Date() }],
     } as any;
+
+    // this.calendarOptions = {
+    //   themeSystem: 'bootstrap3',
+    //   editable: false,
+    //   eventLimit: true,
+    //   header: {
+    //     left: 'prev,next',
+    //     center: 'title',
+    //     right: 'month,listMonth',
+    //   },
+    //   displayEventEnd: true,
+    //   displayEventTime: true,
+    //   timeFormat: 'HH:mm',
+    //   eventSources: eventSources || [],
+    // } as any;
   }
 
   getMonthEvents(date?: Date) {
@@ -247,7 +298,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
           const eventSourceList = res.data;
           const eventSources = this.mapResponseToEventSources(eventSourceList);
           eventSources.forEach((eventSource) => {
-            this.ucCalendar.getApi().addEventSource(eventSource);
+            // this.ucCalendar.fullCalendar('addEventSource', eventSource);
           });
         } else {
           this.confirmationService.alert(res.errorMessage, 'warn');
@@ -264,7 +315,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
   }
 
   getSpecialist() {
-    this.ucCalendar.getApi().removeAllEventSources();
+    //  this.ucCalendar.fullCalendar('removeEventSources');
     this.selectedSpecialist = undefined;
     this.availabiltyForm.reset();
 
