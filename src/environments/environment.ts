@@ -33,7 +33,7 @@ const IP = '183.82.107.186';
 const COMMON_API_OPEN = `${commonIP}commonapi-v1.0/`;
 const COMMON_API = `${commonIP}commonapi-v1.0/`;
 const SCHEDULER_API = `${schedulerIP}schedulerapi-v1.0/`;
-const TM_API = `${tmIP}`;
+const TM_API = `${tmIP}tmapi-v1.0/`;
 
 // const TM_API = `${tmIP}tmapi-v1.0/`;
 const MMU_API = `http://${IP}:8080/mmuapi-v1.0/`;

@@ -106,10 +106,17 @@ export class TotalConsultationReportComponent implements OnInit, DoCheck {
 
   searchReport() {
     const reqObjForTotalConsultationReport = {
+      fromDate: new Date(
+        this.fromDate.valueOf() -
+          1 * this.fromDate.getTimezoneOffset() * 60 * 1000,
+      ),
+      toDate: new Date(
+        this.toDate.valueOf() - 1 * this.toDate.getTimezoneOffset() * 60 * 1000,
+      ),
       providerServiceMapID: this.providerServiceMapID,
       userID: this.userID,
-      fromDate: moment(this.fromDate).format('YYYY-MM-DD'),
-      toDate: moment(this.toDate).format('YYYY-MM-DD'),
+      // fromDate: moment(this.fromDate).format('YYYY-MM-DD'),
+      // toDate: moment(this.toDate).format('YYYY-MM-DD'),
     };
     console.log(
       'reqObjForTotalConsultationReport',
