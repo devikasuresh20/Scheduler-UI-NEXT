@@ -255,8 +255,8 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
       themeSystem: 'bootstrap5',
       plugins: [dayGridPlugin],
       initialView: 'dayGridMonth',
-      weekends: false,
-      editable: false,
+      weekends: true,
+      editable: true,
       eventLimit: true,
       header: {
         left: 'prev,next',
