@@ -101,25 +101,6 @@
                 ></mat-datepicker-toggle>
                 <mat-datepicker #configuredFromDatePicker></mat-datepicker>
               </mat-form-field>
-              <!-- <mat-form-field class="input-full-width">
-                <mat-label>{{ currentLanguageSet?.fromDate }}</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="configuredFromDatePicker"
-                  class="input-full-width"
-                  name="configuredFromDate"
-                  formControlName="configuredFromDate"
-                  readonly
-                  [min]="minSelectableDate"
-                  [max]="maxSelectableDate"
-                  required
-                />
-                <mat-datepicker-toggle
-                  matPrefix
-                  [for]="configuredFromDatePicker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #configuredFromDatePicker></mat-datepicker>
-              </mat-form-field> -->
             </div>
             <div class="col-xs-12 box" [hidden]="isAvailability === 'false'">
               <mat-form-field

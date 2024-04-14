@@ -39,6 +39,7 @@ import { HttpServiceService } from '../../core/services/http-service.service';
 import { CalendarOptions } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { DateTime } from 'ts-luxon';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-timesheet',
@@ -159,12 +160,19 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
     const fromDate = new Date(availabilityFormValue.configuredFromDate);
     fromDate.setHours(5, 30, 0, 0);
     availabilityFormValue.configuredFromDate = fromDate;
-
-    const fromTime = new Date(availabilityFormValue.configuredFromTime);
-    const temp1 = new Date(availabilityFormValue.configuredFromDate);
-    temp1.setHours(fromTime.getHours() + 5, fromTime.getMinutes() + 30);
-    availabilityFormValue.configuredFromTime = temp1.toJSON();
-
+    console.log('fromDate', fromDate);
+    const fromTime = availabilityFormValue.configuredFromTime;
+    console.log('fromTime', fromTime);
+    const combinedDateTime = moment(
+      `${fromDate.toISOString().split('T')[0]} ${fromTime}`,
+      'YYYY-MM-DD hh:mm A',
+    );
+    console.log('combinedDateTime', combinedDateTime);
+    const formattedFromTime = combinedDateTime.format(
+      'YYYY-MM-DDTHH:mm:ss.SSS[Z]',
+    );
+    console.log('formattedFromTime', formattedFromTime);
+    availabilityFormValue.configuredFromTime = formattedFromTime;
     const toDate = new Date(availabilityFormValue.configuredToDate);
     toDate.setHours(5, 30, 0, 0);
     availabilityFormValue.configuredToDate = toDate;
@@ -175,17 +183,32 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
     availabilityFormValue.userID = this.selectedSpecialist.userID;
 
     if (availabilityFormValue.isAvailability === 'true') {
-      const toTime = new Date(availabilityFormValue.configuredToTime);
-      const temp2 = new Date(availabilityFormValue.configuredToDate);
-      temp2.setHours(toTime.getHours() + 5, toTime.getMinutes() + 30);
-      availabilityFormValue.configuredToTime = temp2.toJSON();
+      const toTime = availabilityFormValue.configuredToTime;
+      console.log('toTime', toTime);
+      const combinedDateToTime = moment(
+        `${toDate.toISOString().split('T')[0]} ${toTime}`,
+        'YYYY-MM-DD hh:mm A',
+      );
+      console.log('combinedDateTime', combinedDateToTime);
+      const formattedToTime = combinedDateToTime.format(
+        'YYYY-MM-DDTHH:mm:ss.SSS[Z]',
+      );
+      console.log('formattedToTime', formattedToTime);
+      availabilityFormValue.configuredToTime = formattedToTime;
       this.markAvailability(availabiltyForm, availabilityFormValue);
     } else {
-      const toTime = new Date(availabilityFormValue.configuredToTime);
-      const temp3 = new Date(availabilityFormValue.configuredFromDate);
-      temp3.setHours(toTime.getHours() + 5, toTime.getMinutes() + 30);
-      availabilityFormValue.configuredToTime = temp3.toJSON();
-
+      const toTime = availabilityFormValue.configuredToTime;
+      console.log('toTimeelse', toTime);
+      const combinedDateToTime = moment(
+        `${toDate.toISOString().split('T')[0]} ${toTime}`,
+        'YYYY-MM-DD hh:mm A',
+      );
+      console.log('combinedDateToTimeelse', combinedDateToTime);
+      const formattedToTime = combinedDateTime.format(
+        'YYYY-MM-DDTHH:mm:ss.SSS[Z]',
+      );
+      console.log('formattedToTimeelse', formattedToTime);
+      availabilityFormValue.configuredToTime = formattedToTime;
       availabilityFormValue.ExcludeDays = undefined;
       availabilityFormValue.toDate = undefined;
       this.markNonAvailability(availabiltyForm, availabilityFormValue);

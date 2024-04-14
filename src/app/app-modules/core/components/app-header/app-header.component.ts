@@ -243,40 +243,60 @@ export class AppHeaderComponent implements OnInit {
 
   redirectToSpecialistWorklist() {
     const returnUrl: any = sessionStorage.getItem('tm-return');
-    this.router.navigateByUrl(returnUrl);
+    window.location.href = returnUrl;
+    // this.router.navigateByUrl(returnUrl);
   }
 
   returnToMMU: any;
   logout() {
     const loginUrl: any = sessionStorage.getItem('tm-fallback');
-    this.auth.logout().subscribe({
-      next: (res: any) => {
+    this.auth.logout().subscribe(
+      (res: any) => {
         this.auth.removeExternalSessionData();
-        this.router.navigateByUrl(loginUrl);
+        window.location.href = loginUrl;
       },
-      error: (error: any) => {
+      (error) => {
         this.auth.removeExternalSessionData();
-        this.router.navigateByUrl(loginUrl);
+        window.location.href = loginUrl;
       },
-    });
+    );
   }
+  // logout() {
+  //   const loginUrl: any = sessionStorage.getItem('tm-fallback');
+  //   this.auth.logout().subscribe({
+  //     next: (res: any) => {
+  //       this.auth.removeExternalSessionData();
+  //       this.router.navigateByUrl(loginUrl);
+  //     },
+  //     error: (error: any) => {
+  //       this.auth.removeExternalSessionData();
+  //       this.router.navigateByUrl(loginUrl);
+  //     },
+  //   });
+  // }
 
-  handleKeyDownSwymed(event: KeyboardEvent): void {
-    if (
-      event.key === 'Enter' ||
-      event.key === 'Spacebar' ||
-      event.key === ' '
-    ) {
-      this.getSwymedLogout();
-    }
-  }
-
+  // handleKeyDownSwymed(event: KeyboardEvent): void {
+  //   if (
+  //     event.key === 'Enter' ||
+  //     event.key === 'Spacebar' ||
+  //     event.key === ' '
+  //   ) {
+  //     this.getSwymedLogout();
+  //   }
+  // }
   getSwymedLogout() {
     this.auth.getSwymedLogout().subscribe((res: any) => {
       window.location.href = res.data.response;
       this.logout();
     });
   }
+
+  // getSwymedLogout() {
+  //   this.auth.getSwymedLogout().subscribe((res: any) => {
+  //     window.location.href = res.data.response;
+  //     this.logout();
+  //   });
+  // }
 
   commitDetailsUI: any;
   versionUI: any;

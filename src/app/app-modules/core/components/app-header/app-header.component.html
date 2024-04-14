@@ -57,11 +57,8 @@
           class="logout cursorPointer"
           matTooltip="{{ currentLanguageSet?.logout }}"
         >
-          <a
-            (click)="getSwymedLogout()"
-            tabindex="0"
-            (keydown)="handleKeyDownSwymed($event)"
-          >
+          <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
+          <a (click)="getSwymedLogout()" tabindex="0">
             <span class="logoutIcon"></span>
             <span
               style="color: #ffffff"
