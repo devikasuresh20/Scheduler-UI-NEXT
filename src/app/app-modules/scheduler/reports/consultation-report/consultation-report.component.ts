@@ -256,7 +256,7 @@ export class ConsultationReportComponent implements OnInit, DoCheck {
         });
       }
       this.confirmationService.alert(
-        this.currentLanguageSet.monthlyReportdownloaded,
+        this.currentLanguageSet.consultationReportdownloaded,
         'success',
       );
     } else {

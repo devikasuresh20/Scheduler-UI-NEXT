@@ -227,7 +227,7 @@ export class DailyReportComponent implements OnInit, DoCheck {
         });
       }
       this.confirmationService.alert(
-        this.currentLanguageSet.monthlyReportdownloaded,
+        this.currentLanguageSet.dailyReportdownloaded,
         'success',
       );
     } else {

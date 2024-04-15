@@ -259,7 +259,7 @@ export class TotalConsultationReportComponent implements OnInit, DoCheck {
         });
       }
       this.confirmationService.alert(
-        this.currentLanguageSet.monthlyReportdownloaded,
+        this.currentLanguageSet.totalConsultationReportDownloaded,
         'success',
       );
     } else {
