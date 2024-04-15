@@ -1,9 +1,11 @@
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-  <h4>{{ currentLanguageSet?.chiefComplaintReport }}</h4>
+  <h4 style="font-size: 18px; margin-left: 15px">
+    {{ currentLanguageSet?.chiefComplaintReport }}
+  </h4>
 </div>
-<div class="m-b-10">
-  <form [formGroup]="chiefComplaintForm">
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+<div class="m-b-10 col-12">
+  <form [formGroup]="chiefComplaintForm" class="row">
+    <div class="col-3">
       <mat-form-field>
         <mat-label>{{ currentLanguageSet?.startDate }}</mat-label>
         <input
@@ -26,7 +28,7 @@
       </mat-form-field>
     </div>
 
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+    <div class="col-3">
       <mat-form-field class="input-full-width">
         <mat-label>{{ currentLanguageSet?.endDate }}</mat-label>
         <input
@@ -50,7 +52,10 @@
     </div>
   </form>
 </div>
-<div class="m-t-20 col-xs-12 col-sm-12 col-md-12 col-lg-12 pull-right">
+<div
+  class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pull-right"
+  style="text-align: end"
+>
   <button
     mat-raised-button
     class="pull-right"

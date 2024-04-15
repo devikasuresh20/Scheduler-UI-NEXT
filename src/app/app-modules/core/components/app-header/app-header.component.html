@@ -38,7 +38,8 @@
 
         <li class="alignDropDown">
           <select
-            class="form-control drop-arrow border-radius-20 height-30 width120px pull-right"
+            style="font-size: 13px; padding: 5px"
+            class="menu-font drop-arrow border-radius-20 width120px pull-right"
             name="app_language"
             [(ngModel)]="app_language"
             (change)="changeLanguage(app_language)"
@@ -51,23 +52,6 @@
             </option>
           </select>
         </li>
-
-        <li
-          *ngIf="isAuthenticated"
-          class="logout cursorPointer"
-          matTooltip="{{ currentLanguageSet?.logout }}"
-        >
-          <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
-          <a (click)="getSwymedLogout()" tabindex="0">
-            <span class="logoutIcon"></span>
-            <span
-              style="color: #ffffff"
-              class="hidden-sm hidden-md hidden-lg"
-              >{{ currentLanguageSet?.logout }}</span
-            >
-          </a>
-        </li>
-
         <li
           *ngIf="servicePoint"
           class="servicePoint cursorPointer"
@@ -83,14 +67,32 @@
             </span>
           </a>
         </li>
-        <li class="cursorPointer">
-          <span
-            class="fa fa-question-circle helpAlign"
-            matTooltip="
-          {{ currentLanguageSet?.help }}"
+
+        <li
+          *ngIf="userName"
+          matTooltip="{{ currentLanguageSet?.user }}"
+          style="margin-top: 7px"
+        >
+          <a>
+            <img src="assets/images/user1.png" alt="user1" />
+            <span style="color: #d9d9d9">
+              {{ currentLanguageSet?.user }}
+              <span style="color: #d9d9d9">:</span>
+              <span style="color: #ffffff">{{ userName | titlecase }}</span>
+            </span>
+          </a>
+        </li>
+        <li
+          class="nav-item cursorPointer"
+          *ngIf="isAuthenticated"
+          style="margin-top: 7px"
+        >
+          <mat-icon
             alt="Help"
             [matMenuTriggerFor]="knowAboutUs"
-          ></span>
+            matTooltip="{{ currentLanguageSet?.coreComponents?.help }}"
+            >help_outline</mat-icon
+          >
         </li>
         <mat-menu #knowAboutUs x-position="before" class="m-t-40">
           <mat-list class="p-t-0">
@@ -107,14 +109,15 @@
             </mat-list-item>
           </mat-list>
         </mat-menu>
-        <li *ngIf="userName" matTooltip="{{ currentLanguageSet?.user }}">
-          <a>
-            <img src="assets/images/user1.png" alt="user1" />
-            <span style="color: #d9d9d9">
-              {{ currentLanguageSet?.user }}
-              <span style="color: #d9d9d9">:</span>
-              <span style="color: #ffffff">{{ userName | titlecase }}</span>
-            </span>
+        <li
+          style="margin-top: 7px"
+          *ngIf="isAuthenticated"
+          class="logout cursorPointer"
+          matTooltip="{{ currentLanguageSet?.logout }}"
+        >
+          <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
+          <a (click)="getSwymedLogout()" tabindex="0">
+            <span class="logoutIcon"></span>
           </a>
         </li>
         <!-- <li class="alignDropDown">
@@ -145,11 +148,7 @@
 
 <div *ngIf="showRoles" class="container-fluid">
   <nav class="navbar navbar-expand-lg">
-    <div
-      class="collapse navbar-collapse"
-      id="main-navbar"
-      style="padding: 25px"
-    >
+    <div class="collapse navbar-collapse" id="main-navbar">
       <ul
         class="nav navbar-nav ml-auto"
         *ngFor="let item of filteredNavigation; let isLast = last"
