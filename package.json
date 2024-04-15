@@ -12,7 +12,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "src/**/*.{ts,css,html}": [
+    "src/**/*.{ts,html}": [
       "eslint --fix"
     ]
   },
