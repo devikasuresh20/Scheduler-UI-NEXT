@@ -232,6 +232,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
             );
             availabiltyForm.reset();
             availabiltyForm.markAsPristine();
+            this.initializeCalender();
             this.initDayList();
             // this.ucCalendar.fullCalendar('removeEventSources');
             this.getMonthEvents(new Date());
