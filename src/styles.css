@@ -196,3 +196,15 @@ hr {
 .mat-mdc-select-trigger {
   border-bottom-style: groove;
 }
+.fc-direction-ltr .fc-daygrid-event.fc-event-end, .fc-direction-rtl .fc-daygrid-event.fc-event-start {
+  margin-right: 2px;
+  background-color: green; 
+  color: white;
+}
+
+.fc .fc-col-header-cell-cushion {
+  display: inline-block;
+  padding: 2px 4px;
+  color: black;
+  border-bottom: unset;
+}
