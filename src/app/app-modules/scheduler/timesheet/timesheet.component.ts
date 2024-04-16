@@ -270,6 +270,16 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
         center: 'title',
         right: 'month,listMonth',
       },
+      eventDidMount: function (info: any) {
+        console.log('evenrednder', info);
+        if (info.backgroundColor === 'green') {
+          info.el.style.backgroundColor = 'green';
+          info.el.style.color = 'white';
+        } else {
+          info.el.style.backgroundColor = 'red';
+          info.el.style.color = 'white';
+        }
+      },
       displayEventEnd: true,
       displayEventTime: true,
       timeZone: 'UTC',
