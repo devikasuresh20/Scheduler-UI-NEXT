@@ -168,7 +168,7 @@ hr {
   filter: blur(8px);
 }
 
-.fc .fc-daygrid-event-harness-abs {
+/* .fc .fc-daygrid-event-harness-abs {
   left: 0px;
   position: absolute;
   right: 0px;
@@ -179,7 +179,7 @@ hr {
 .fc .fc-daygrid-event-harness {
   position: relative;
   width: fit-content !important;
-}
+} */
 .fc .fc-toolbar.fc-header-toolbar {
    margin: 10px !important;
 }
@@ -196,15 +196,36 @@ hr {
 .mat-mdc-select-trigger {
   border-bottom-style: groove;
 }
-.fc-direction-ltr .fc-daygrid-event.fc-event-end, .fc-direction-rtl .fc-daygrid-event.fc-event-start {
-  margin-right: 2px;
-  background-color: green; 
-  color: white;
-}
-
 .fc .fc-col-header-cell-cushion {
   display: inline-block;
   padding: 2px 4px;
   color: black;
-  border-bottom: unset;
+  text-decoration: none;
+}
+
+.fc .fc-daygrid-day-number {
+  color: black;
+  text-decoration: none;
+}
+.fc-direction-ltr .fc-daygrid-event.fc-event-end, .fc-direction-rtl .fc-daygrid-event.fc-event-start {
+  margin-right: 2px;
+  background-color: #E0E0E0;
+}
+.fc-direction-ltr .fc-button-group > .fc-button:not(:last-child) {
+  background-color: #134D87;
+}
+.fc-direction-ltr .fc-button-group > .fc-button:not(:first-child) {
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0px;
+  margin-left: -1px;
+  background-color: #134D87;
+}
+.fc .fc-button:not(:disabled) {
+  background-color: #134D87;
+}
+.mat_success{
+  background-color: green !important;
+}
+.mat_success:disabled{
+  background-color: #E0E0E0 !important;
 }

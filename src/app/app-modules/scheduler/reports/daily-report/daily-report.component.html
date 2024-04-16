@@ -1,43 +1,45 @@
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-  <h4 style="font-size: 18px; margin-left: 15px">
-    {{ currentLanguageSet?.dailyReport }}
-  </h4>
-</div>
+<div class="container-fluid">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <h4 style="font-size: 18px; margin-left: 15px">
+      {{ currentLanguageSet?.dailyReport }}
+    </h4>
+  </div>
 
-<div class="m-b-10 col-12">
-  <form [formGroup]="dailyReportForm" class="row">
-    <div class="col-3">
-      <mat-form-field class="input-full-width">
-        <mat-label>{{ currentLanguageSet?.fromDate }}</mat-label>
-        <input
-          readonly
-          matInput
-          [matDatepicker]="fromDatePicker"
-          name="fromDate"
-          id="fromDate"
-          formControlName="fromDate"
-          [max]="maxEndDate"
-          required
-        />
-        <mat-datepicker-toggle
-          matPrefix
-          [for]="fromDatePicker"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #fromDatePicker></mat-datepicker>
-      </mat-form-field>
-    </div>
-  </form>
-</div>
+  <div class="m-b-10 col-12">
+    <form [formGroup]="dailyReportForm" class="row">
+      <div class="col-3">
+        <mat-form-field class="input-full-width">
+          <mat-label>{{ currentLanguageSet?.fromDate }}</mat-label>
+          <input
+            readonly
+            matInput
+            [matDatepicker]="fromDatePicker"
+            name="fromDate"
+            id="fromDate"
+            formControlName="fromDate"
+            [max]="maxEndDate"
+            required
+          />
+          <mat-datepicker-toggle
+            matPrefix
+            [for]="fromDatePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #fromDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
 
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="text-align: end">
-  <button
-    mat-raised-button
-    class="pull-right"
-    color="accent"
-    type="submit"
-    [disabled]="!dailyReportForm.valid"
-    (click)="downloadReport(true)"
-  >
-    {{ currentLanguageSet?.download }}
-  </button>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="text-align: end">
+    <button
+      mat-raised-button
+      class="pull-right mat_success"
+      color="accent"
+      type="submit"
+      [disabled]="!dailyReportForm.valid"
+      (click)="downloadReport(true)"
+    >
+      {{ currentLanguageSet?.download }}
+    </button>
+  </div>
 </div>
