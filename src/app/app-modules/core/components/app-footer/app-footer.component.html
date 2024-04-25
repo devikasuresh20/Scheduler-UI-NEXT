@@ -1,14 +1,42 @@
 <footer class="footer container-fluid">
   <div class="row">
-    <div class="col-xs-4 text-left">
+    <div class="col-4 text-left">
+      <span
+        class="footer-text"
+        *ngIf="currentLanguageSet === null || currentLanguageSet === undefined"
+        >Powered by: WIPRO</span
+      >
       <span class="footer-text">{{ currentLanguageSet?.poweredByWipro }}</span>
     </div>
-    <div class="col-xs-4 text-center">
-      <p class="footer-text">{{ year }} © {{ currentLanguageSet?.pSMRI }}</p>
+    <div class="col-4 text-center">
+      <p
+        class="footer-text"
+        *ngIf="currentLanguageSet !== null && currentLanguageSet !== undefined"
+      >
+        {{ year }} © {{ currentLanguageSet?.pSMRI }}
+      </p>
     </div>
-    <div class="col-xs-4 text-right">
+    <div class="col-4 text-end">
       <p class="footer-text">
-        <span [ngClass]="{ online: status, offline: !status }"></span>
+        <span
+          class="footer-text"
+          *ngIf="
+            currentLanguageSet === null || currentLanguageSet === undefined
+          "
+          >{{ status ? "Online" : "Offline" }}</span
+        >
+        <span
+          [style.background]="status ? 'green' : 'red'"
+          style="
+            display: inline-block;
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+          "
+          *ngIf="
+            currentLanguageSet !== null && currentLanguageSet !== undefined
+          "
+        ></span>
         {{
           status ? currentLanguageSet?.online : currentLanguageSet?.offline
         }}&nbsp;

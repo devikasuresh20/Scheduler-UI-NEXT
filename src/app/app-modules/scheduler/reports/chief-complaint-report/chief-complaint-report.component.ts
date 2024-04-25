@@ -146,7 +146,7 @@ export class ChiefComplaintReportComponent implements OnInit, DoCheck {
             JSON.stringify(response, null, 4),
           );
           if (response.statusCode === 200) {
-            this.chiefComplaintRawData = response.data;
+            this.chiefComplaintRawData = response.data[0].chiefComplaintReport;
             console.log(
               'chiefComplaintRawData',
               JSON.stringify(this.chiefComplaintRawData, null, 4),

@@ -100,7 +100,8 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
     this.initDayList();
     this.initTimeList();
     this.getSpecialisationMaster();
-    this.getUserDesignation();
+    const date = new Date();
+    this.getUserDesignation(date);
 
     this.minSelectableDate = new Date();
     const temp = new Date();
@@ -108,7 +109,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
     this.maxSelectableDate = temp;
   }
 
-  getUserDesignation() {
+  getUserDesignation(date: any) {
     console.log('this.route.params', this.route.params);
     let userInfo;
     console.log('Hi Parth');
@@ -120,7 +121,6 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
       } else {
         userInfo = { userID: localStorage.getItem('supervisor-specialistID') };
       }
-      const date = new Date();
       this.selectedSpecialist = userInfo;
       this.schedulerService
         .getAllEvents(userInfo, date.getFullYear(), date.getMonth() + 1)
@@ -175,7 +175,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
       );
       console.log('formattedToTime', formattedToTime);
       availabilityFormValue.configuredToTime = formattedToTime;
-      this.markAvailability(availabiltyForm, availabilityFormValue);
+      this.markAvailability(availabiltyForm, availabilityFormValue, toDate);
     } else {
       const toTime = availabilityFormValue.configuredToTime;
       console.log('toTimeelse', toTime);
@@ -191,11 +191,19 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
       availabilityFormValue.configuredToTime = formattedToTime;
       availabilityFormValue.ExcludeDays = undefined;
       availabilityFormValue.toDate = undefined;
-      this.markNonAvailability(availabiltyForm, availabilityFormValue);
+      this.markNonAvailability(
+        availabiltyForm,
+        availabilityFormValue,
+        fromDate,
+      );
     }
   }
 
-  markAvailability(availabiltyForm: FormGroup, availabilityFormValue: any) {
+  markAvailability(
+    availabiltyForm: FormGroup,
+    availabilityFormValue: any,
+    date: any,
+  ) {
     this.schedulerService.markAvailability(availabilityFormValue).subscribe(
       (res: any) => {
         if (res.statusCode === 200 && res.data) {
@@ -206,7 +214,7 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
           availabiltyForm.reset();
           availabiltyForm.markAsPristine();
           // this.calendarOptions = undefined;
-          this.initializeCalender();
+          this.getUserDesignation(date);
           // this.initDayList();
           // this.ucCalendar.fullCalendar('removeEventSources');
           // this.getMonthEvents(new Date());
@@ -220,7 +228,11 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
     );
   }
 
-  markNonAvailability(availabiltyForm: any, nonAvailabilityFormValue: any) {
+  markNonAvailability(
+    availabiltyForm: any,
+    nonAvailabilityFormValue: any,
+    date: any,
+  ) {
     this.schedulerService
       .markNonAvailability(nonAvailabilityFormValue)
       .subscribe(
@@ -232,7 +244,8 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
             );
             availabiltyForm.reset();
             availabiltyForm.markAsPristine();
-            this.initializeCalender();
+            // this.initializeCalender();
+            this.getUserDesignation(date);
             this.initDayList();
             // this.ucCalendar.fullCalendar('removeEventSources');
             this.getMonthEvents(new Date());
@@ -244,16 +257,6 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
           this.confirmationService.alert(error, 'warn');
         },
       );
-  }
-
-  clickButton(model: any) {
-    const action = model.buttonType;
-    const temp = model.data as Moment;
-    // this.ucCalendar.fullCalendar('removeEventSources');;
-    this.getMonthEvents(temp.toDate());
-    // const temp = model.data as Moment;
-    // this.ucCalendar.getApi().removeAllEventSources();
-    // this.getMonthEvents(temp.toDate());
   }
 
   initCalender(eventSources?: any) {
@@ -280,6 +283,25 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
           info.el.style.color = 'white';
         }
       },
+      datesSet: (info: any) => {
+        const startDateUTC = info.start;
+        const endDateUTC = info.end;
+        const startYear = startDateUTC.getFullYear();
+        const startMonth = startDateUTC.getMonth();
+
+        const endYear = endDateUTC.getFullYear();
+        const endMonth = endDateUTC.getMonth();
+
+        const startDateLocal = new Date(Date.UTC(startYear, startMonth - 1, 1));
+        const endDateLocal = new Date(Date.UTC(endYear, endMonth, 0));
+
+        const startDateString = startDateLocal.toLocaleDateString();
+        const endDateString = endDateLocal.toLocaleDateString();
+
+        this.handleNavigation(startDateString, endDateString);
+        const caldate = new Date(endDateString);
+        this.getUserDesignation(caldate);
+      },
       displayEventEnd: true,
       displayEventTime: true,
       timeZone: 'UTC',
@@ -287,6 +309,10 @@ export class TimesheetComponent implements OnInit, OnChanges, DoCheck {
       eventSources: eventSources || [],
       // events: [{ title: 'Meeting', start: new Date() }],
     } as any;
+  }
+  handleNavigation(startDate: string, endDate: string) {
+    const tempendDate = new Date(endDate);
+    this.getMonthEvents(tempendDate);
   }
 
   getMonthEvents(date?: Date) {
