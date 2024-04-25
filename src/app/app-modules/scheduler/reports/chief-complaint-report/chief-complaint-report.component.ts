@@ -275,7 +275,7 @@ export class ChiefComplaintReportComponent implements OnInit, DoCheck {
         });
       }
       this.confirmationService.alert(
-        this.currentLanguageSet.chiefComplaintreportdownloaded,
+        this.currentLanguageSet.monthlyReportdownloaded,
         'success',
       );
     } else {

@@ -123,53 +123,8 @@
                 ></mat-datepicker-toggle>
                 <mat-datepicker #configuredToDatePicker></mat-datepicker>
               </mat-form-field>
-              <!-- <mat-form-field class="input-full-width">
-                <mat-label>{{ currentLanguageSet?.inventory?.date }}</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="configuredToDatePicker"
-                  class="input-full-width"
-                  formControlName="configuredToDate"
-                  readonly
-                  name="configuredToDate"
-                  [min]="configuredFromDate"
-                  [max]="maxSelectableDate"
-                  [required]="configuredToDateBoolean"
-                />
-                <mat-datepicker-toggle
-                  matPrefix
-                  [for]="configuredToDatePicker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #configuredToDatePicker></mat-datepicker>
-              </mat-form-field> -->
             </div>
             <div class="col-xs-12 box">
-              <!-- <mat-form-field class="input-full-width">
-                <mat-label>{{ currentLanguageSet?.fromTime }}</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="configuredFromTimePicker"
-                  type="time"
-                  class="input-full-width"
-                  formControlName="configuredFromTime"
-                  name="configuredFromTime"
-                  required
-                />
-                <mat-datepicker-toggle
-                  matPrefix
-                  [for]="configuredFromTimePicker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #configuredFromTimePicker></mat-datepicker>
-              </mat-form-field> -->
-
-              <!-- <mat-form-field appearance="fill">
-                <mat-label>TIMEPICKER</mat-label>
-                <input matTimepicker 
-                 id="timepicker-example" mode="24h" 
-                  placeholder="{{currentLanguageSet?.fromTime}}" formControlName="configuredFromTime"
-                  name="configuredFromTime"
-                  required>
-              </mat-form-field> -->
               <mat-form-field
                 class="input-full-width mat_form_field_background_color_table"
               >
@@ -223,29 +178,6 @@
                 [max]="maxTime"
                 [min]="minTime"
               ></ngx-mat-timepicker>
-              <!-- <mat-form-field class="input-full-width">
-                <mat-label>{{ currentLanguageSet?.toTime }}</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="configuredToTimePicker"
-                  type="time"
-                  class="input-full-width"
-                  formControlName="configuredToTime"
-                  name="configuredToTime"
-                  [min]="
-                    configuredFromDate?.getTime() ===
-                    configuredToDate?.getTime()
-                      ? configuredFromTime
-                      : null
-                  "
-                  required
-                />
-                <mat-datepicker-toggle
-                  matPrefix
-                  [for]="configuredToTimePicker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #configuredToTimePicker></mat-datepicker>
-              </mat-form-field> -->
             </div>
             <div class="col-xs-12 day-list" *ngIf="isAvailability !== 'false'">
               <button
