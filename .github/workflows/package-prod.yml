@@ -1,4 +1,4 @@
-name: Package Prod
+clearname: Package Prod
 on:
   push:
     branches: [ "master"]
