@@ -18,6 +18,7 @@ on:
     branches: [ "master" ]
   schedule:
     - cron: '34 16 * * 1'
+  pull_request: path-ignore
 
 jobs:
   analyze:
